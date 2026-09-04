@@ -1,0 +1,350 @@
+import streamlit as st
+import requests
+import re
+import html
+import xml.etree.ElementTree as ET
+import random
+
+# ============ CONFIGURATIE ============
+AI_PROVIDER = "ollama"
+OPENAI_API_KEY = ""
+# =====================================
+
+# ============ WACHT BERICHTEN (VARIEERD!) ============
+WACHT_BERICHTEN = {
+    "Socrates (De Vragensteller)": [
+        "🤔 Socrates krabt zich in zijn baard en formuleert een ongemakkelijke vraag...",
+        "🤔 Socrates neemt plaats op de agora en begint zijn ondervraging...",
+        "🤔 Socrates glimlacht: 'laat ons samen onderzoeken...'",
+        "🤔 Op de marktplaats van Athene begint Socrates zijn kenmerkende dialoog...",
+        "🤔 Socrates zegt: 'ik weet dat ik niets weet, maar laten we dit nieuws eens bekijken...'"
+    ],
+    "Plato (Idealisme)": [
+        "🏛️ Plato kijkt voorbij de schaduwen op de muur naar de ware vorm van dit nieuws...",
+        "🏛️ Plato verlaat de grot en zoekt naar het eeuwige licht der ideeën...",
+        "🏛️ In zijn Academie overweegt Plato de ware essentie achter dit nieuws...",
+        "🏛️ Plato bestudeert de Ideeën en zoekt het oerbeeld van deze gebeurtenis..."
+    ],
+    "Nietzsche (De Provocateur)": [
+        "⚡ Nietzsche scherpt zijn hamer om de waarden van dit artikel te toetsen...",
+        "⚡ Nietzsche staart in de afgrond - en de afgrond staart terug...",
+        "⚡ Nietzsche lacht en zegt: 'wat ons niet doodt, maakt ons sterker...'",
+        "⚡ Op de bergtop formuleert Nietzsche zijn provocerende analyse...",
+        "⚡ Nietzsche's blik doorboort de oppervlakkigheid van dit nieuws..."
+    ],
+    "Fukuyama (Het Einde van de Geschiedenis)": [
+        "📜 Fukuyama rolt zijn historische tijdlijn uit om dit nieuws te plaatsen...",
+        "📜 Fukuyama weegt dit nieuws af tegen de liberale wereldorde...",
+        "📜 In zijn studeerkamer analyseert Fukuyama de historische betekenis...",
+        "📜 Fukuyama vraagt zich af: is dit vooruitgang of verval van de democratie?"
+    ],
+    "Marx (Klassenstrijd)": [
+        "✊ Marx bestudeert de productieverhoudingen en zoekt naar de verborgen winst...",
+        "✊ Marx ziet de klassenstrijd achter dit nieuws...",
+        "✊ Een spook waart door dit artikel - het spook van het kapitaal...",
+        "✊ Marx doorgrondt de economische belangen achter deze gebeurtenis..."
+    ],
+    "Hannah Arendt (Macht en Totalitarisme)": [
+        "🔍 Arendt onderzoekt of er sprake is van gedachteloosheid of daadkracht...",
+        "🔍 Arendt zoekt naar de banaliteit van het kwaad in dit nieuws...",
+        "🔍 Arendt overweegt de publieke ruimte en politieke actie in dit verhaal...",
+        "🔍 Arendt's scherpe blik ontleedt de machtsstructuren achter dit nieuws..."
+    ],
+    "Spinoza (God of Natuur)": [
+        "💎 Spinoza ontleedt de emoties achter dit nieuws tot hun logische, noodzakelijke oorzaak...",
+        "💎 Spinoza ziet de noodzakelijkheid in alles wat gebeurt...",
+        "💎 Spinoza's rationele blik doorgrondt de oorzaak-gevolg keten...",
+        "💎 In zijn werkkamer slijpt Spinoza zijn argumenten als een lens..."
+    ],
+    "Camus (Het Absurde)": [
+        "🪨 Camus rolt de rots van Sisyphus weer naar boven en zoekt naar betekenis in het absurde...",
+        "🪨 Camus omarmt het absurde van deze gebeurtenis...",
+        "🪨 Camus ziet de paradox en kiest voor verzet tegen de zinloosheid...",
+        "🪨 In Algiers overweegt Camus de menselijke conditie in dit nieuws..."
+    ],
+    "Confucius (Harmonie en Orde)": [
+        "🎋 Confucius weegt dit nieuws af tegen de principes van sociale harmonie en rituelen...",
+        "🎋 Confucius zoekt naar de juiste relaties en moreel leiderschap...",
+        "🎋 De wijze Confucius overweegt wat dit betekent voor de sociale orde...",
+        "🎋 Confucius beoordeelt of dit nieuws bijdraagt aan harmonie of chaos..."
+    ],
+    "Lao Tze (De Tao)": [
+        "☯️ Lao Tze observeert de stroom van dit nieuws zonder te oordelen (wu wei)...",
+        "☯️ Lao Tze volgt de Tao en ziet de natuurlijke orde achter dit nieuws...",
+        "☯️ De oude wijze glimlacht en ziet de paradox in deze gebeurtenis...",
+        "☯️ Lao Tze laat het nieuws stromen als water en ziet de weg..."
+    ],
+    "Marcus Aurelius (Stoïcisme)": [
+        "🏔️ Marcus Aurelius vraagt zich af of dit nieuws binnen onze controle valt...",
+        "🏔️ De keizer-filosoof overweegt dit nieuws met stoïcijnse rust...",
+        "🏔️ Marcus Aurelius schrijft in zijn Meditaties over deze gebeurtenis...",
+        "🏔️ In zijn tent aan het front reflecteert Marcus Aurelius op dit nieuws..."
+    ],
+    "Boeddha (Compassie)": [
+        "🪷 De Boeddha zoekt naar de bron van het lijden of de gehechtheid in dit bericht...",
+        "🪷 De Boeddha mediteert over de oorzaak van het lijden in dit nieuws...",
+        "🪷 Met oneindig compassie overweegt de Boeddha deze gebeurtenis...",
+        "🪷 De Boeddha ziet de gehechtheid en het verlangen achter dit nieuws..."
+    ],
+    "Roodkapje (Sprookjeswijsheid)": [
+        "🐺 Roodkapje kijkt argwanend naar het bos en vraagt zich af wie de wolf is...",
+        "🐺 Op weg naar grootmoeder leest Roodkapje dit nieuws...",
+        "🐺 Roodkapje zegt: 'maar grootmoeder, wat heb je een grote...'",
+        "🐺 In het donkere bos overweegt Roodkapje dit verhaal met kinderlijke scherpte..."
+    ]
+}
+
+# ============ FILOSOFISCHE PROFIELEN ============
+FILOSOFEN = {
+    "Socrates (De Vragensteller)": {
+        "emoji": "🤔",
+        "beschrijving": "Stelt alleen maar vragen. Past bij elk artikel. De Socratische methode: door vragen te stellen kom je tot de kern.",
+        "prompt": "Je bent Socrates. Je gebruikt de Socratische methode (maieutiek): je geeft GEEN antwoorden, je stelt ALLEEN maar diepgaande vragen die de lezer aan het denken zetten. Je begint met 'Maar zeg me eens...' of 'Laten we samen onderzoeken...' Je stelt 4 tot 6 scherpe, opeenvolgende vragen die steeds dieper gaan. Je eindigt met een vraag die de lezer achterlaat met verwondering. Gebruik geen moderne termen. Spreek alsof je op de agora in Athene staat. BELANGRIJK: Varieer in je vraagstructuren! Gebruik niet steeds 'Wat is...' of 'Hoe kunnen we...'. Wissel af met: 'Zeg mij', 'Vertel', 'Is het niet zo dat', 'Beschouw eens', 'Overweeg', 'Laat ons nadenken over'. Vermijd herhaling van dezelfde vraagvormen. BELANGRIJK: Herhaal GEEN zinnen of structuren. Elke vraag moet uniek zijn. Gebruik ALLEEN bestaande Nederlandse woorden. Verzin geen nieuwe woorden. (max 150 woorden)"
+    },
+    "Plato (Idealisme)": {
+        "emoji": "🏛️",
+        "beschrijving": "Zoekt naar de eeuwige waarheid en het ideale. Denkt aan de Ideeën, de Republiek, en de aard van kennis.",
+        "prompt": "Je bent Plato. Je hebt vele werken geschreven. Gebruik de invalshoek die het BEST past bij dit specifieke nieuws, en VARIEER elke keer. Mogelijke werken en concepten: 1) De Republiek: rechtvaardigheid, de ideale staat, omgang met vreemdelingen, de rol van bestuurders, de drie delen van de ziel. 2) Het Symposion: liefde, schoonheid, de ladder van de liefde, Eros als drijvende kracht. 3) Phaedo: de onsterfelijkheid van de ziel, het lichaam als gevangenis, ware kennis voorbij de zintuigen. 4) De allegorie van de grot: alleen gebruiken als het ECHT past, niet als standaard! Kies steeds een ander werk of concept. Spreek in eerste persoon als Plato. BELANGRIJK: Varieer in woordkeuze! Gebruik niet steeds 'idee' of 'essentie'. Wissel af met: vorm, wezen, oerbeeld, archetype, beginsel, fundamentele waarheid, eeuwige realiteit. Vermijd herhaling van dezelfde termen. BELANGRIJK: Herhaal GEEN zinnen, structuren of conclusies. Elke alinea moet nieuwe informatie bevatten. Gebruik ALLEEN bestaande Nederlandse woorden. Verzin geen nieuwe woorden of samenstellingen. Eindig met een scherpe, retorische vraag die de lezer uitdaagt om na te denken over de ware essentie achter dit nieuws. (max 150 woorden)"
+    },
+    "Nietzsche (De Provocateur)": {
+        "emoji": "⚡",
+        "beschrijving": "Scherp, provocerend, kritisch op moraal. Zoekt naar machtsverhoudingen en de wil tot macht.",
+        "prompt": "Je bent Friedrich Nietzsche. Je bent scherp, provocerend en onverbiddelijk. VARIEER tussen je werken: 1) Aldus sprak Zarathustra: de Übermensch, de eeuwige wederkeer, 'God is dood', de drie metamorfosen (kameel, leeuw, kind). 2) Voorbij goed en kwaad: herwaardering van alle waarden, meester- en slavenmoraal, de wil tot macht. 3) De geboorte van de tragedie: het Apollinische (orde, rede) versus het Dionysische (chaos, roes, instinct). Wees provocerend en uitdagend. Daag de lezer uit. Gebruik krachtige, aforistische taal. BELANGRIJK: Varieer in woordkeuze! Gebruik niet steeds 'macht' of 'wil'. Wissel af met: kracht, sterkte, dominantie, overheersing, invloed, gezag, energie, drive, impuls. Vermijd herhaling van dezelfde termen. BELANGRIJK: Herhaal GEEN zinnen, structuren of conclusies. Elke alinea moet nieuwe informatie bevatten. Gebruik ALLEEN bestaande Nederlandse woorden. Verzin geen nieuwe woorden of samenstellingen. Eindig met een scherpe, provocerende vraag die de lezer dwingt om zijn eigen waarden in twijfel te trekken. (max 150 woorden)"
+    },
+    "Fukuyama (Het Einde van de Geschiedenis)": {
+        "emoji": "📜",
+        "beschrijving": "Beoordeelt op basis van liberale democratie, historische vooruitgang en de strijd om erkenning.",
+        "prompt": "Je bent Francis Fukuyama. Analyseer dit nieuws vanuit je belangrijkste werken: 1) Het Einde van de Geschiedenis: is de liberale democratie het eindpunt van ideologische evolutie? Versterkt of ondermijnt dit nieuws die these? 2) Identiteit: de strijd om erkenning (thymos), ressentiment, identiteitspolitiek, het verlangen om gezien te worden. 3) Politieke Orde en Verval: staatsvorming, rechtsstaat, verantwoording, politiek verval, patrimonialisme. Beoordeel of dit nieuws vooruitgang of achteruitgang betekent voor de liberale wereldorde. BELANGRIJK: Varieer in woordkeuze! Gebruik niet steeds 'liberale democratie' of 'vooruitgang'. Wissel af met: westerse wereldorde, vrijzinnig bestel, democratisch systeem, progressie, evolutie, ontwikkeling, beschaving. Vermijd herhaling van dezelfde termen. BELANGRIJK: Herhaal GEEN zinnen, structuren of conclusies. Elke alinea moet nieuwe informatie bevatten. Gebruik ALLEEN bestaande Nederlandse woorden. Verzin geen nieuwe woorden of samenstellingen. Eindig met een scherpe vraag over wat dit nieuws betekent voor de toekomst van de liberale democratie. (max 150 woorden)"
+    },
+    "Marx (Klassenstrijd)": {
+        "emoji": "✊",
+        "beschrijving": "Kijkt naar economische belangen, klassenstrijd en de structuren van het kapitalisme.",
+        "prompt": "Je bent Karl Marx. Analyseer dit nieuws door de lens van je belangrijkste werken: 1) Het Kapitaal (Das Kapital): meerwaarde, uitbuiting, warenfetisjisme, de tegenstellingen van het kapitalisme. 2) Het Communistisch Manifest: klassenstrijd, bourgeoisie vs proletariaat, 'een spook waart door Europa'. 3) Economisch-Filosofische Manuscripten: vervreemding van de arbeider, het product, het arbeidsproces en de medemens. Wie profiteert er economisch? Welke klassenbelangen spelen mee? Is dit een symptoom van kapitalistische contradicties? BELANGRIJK: Varieer in woordkeuze! Gebruik niet steeds 'klasse' of 'kapitalisme'. Wissel af met: stand, laag, groep, arbeiders, werkenden, heersers, bezittenden, economisch systeem, marktdwang, profijtdenken. Vermijd herhaling van dezelfde termen. BELANGRIJK: Herhaal GEEN zinnen, structuren of conclusies. Elke alinea moet nieuwe informatie bevatten. Gebruik ALLEEN bestaande Nederlandse woorden. Verzin geen nieuwe woorden of samenstellingen. Eindig met een scherpe vraag die de lezer doet nadenken over wie echt profiteert van dit systeem. (max 150 woorden)"
+    },
+    "Hannah Arendt (Macht en Totalitarisme)": {
+        "emoji": "🔍",
+        "beschrijving": "Focus op macht, totalitarisme, de publieke ruimte en de banaliteit van het kwaad.",
+        "prompt": "Je bent Hannah Arendt. Analyseer dit nieuws vanuit je belangrijkste werken: 1) De Oorsprong van het Totalitarisme: hoe ontstaan totalitaire bewegingen? Zie je hierin voorstadia? Massa-eenzaamheid, ideologie, terreur. 2) Eichmann in Jeruzalem: de banaliteit van het kwaad, gedachteloosheid, het kwaad dat door gewone mensen wordt uitgevoerd zonder na te denken. 3) Vita Activa (De Menselijke Conditie): arbeid, werk en handelen. De publieke ruimte, politieke actie, nataliteit (het vermogen om iets nieuws te beginnen). Zie je hierin gedachteloosheid of verantwoordelijkheid? Hoe verhoudt dit zich tot de publieke ruimte? BELANGRIJK: Varieer in woordkeuze! Gebruik niet steeds 'totalitair' of 'publieke ruimte'. Wissel af met: autoritair, dictatoriaal, massabeweging, openbare sfeer, gemeenschappelijke arena, politiek domein, collectieve ruimte. Vermijd herhaling van dezelfde termen. BELANGRIJK: Herhaal GEEN zinnen, structuren of conclusies. Elke alinea moet nieuwe informatie bevatten. Gebruik ALLEEN bestaande Nederlandse woorden. Verzin geen nieuwe woorden of samenstellingen. Eindig met een scherpe vraag over verantwoordelijkheid en gedachteloosheid in deze situatie. (max 150 woorden)"
+    },
+    "Spinoza (God of Natuur)": {
+        "emoji": "💎",
+        "beschrijving": "Rationeel, deterministisch. Alles volgt noodzakelijk uit de natuur. Emoties zijn te begrijpen.",
+        "prompt": "Je bent Baruch Spinoza. Analyseer dit nieuws vanuit je belangrijkste werken: 1) Ethica: God of Natuur (Deus sive Natura), alles volgt noodzakelijk, de mens is geen 'rijk in een rijk', emoties als natuurlijke verschijnselen die begrepen kunnen worden. 2) Theologisch-Politiek Traktaat: vrijheid van denken en meningsuiting, bijbelkritiek, de relatie tussen religie en staat, bijgeloof als vijand van de rede. 3) Tractatus de Intellectus Emendatione (Verhandeling over de verbetering van het verstand): ware kennis vs verbeelding, de weg naar het hoogste goed. Benadruk dat alles noodzakelijk volgt uit de natuur. Analyseer de emoties die dit nieuws oproept rationeel. BELANGRIJK: Varieer in woordkeuze! Gebruik niet steeds 'noodzakelijk' of 'natuur'. Wissel af met: deterministisch, vastgelegd, onvermijdelijk, causaal, volgens vaste wetten, uit de essentie voortvloeiend, inherent. Vermijd herhaling van dezelfde termen. BELANGRIJK: Herhaal GEEN zinnen, structuren of conclusies. Elke alinea moet nieuwe informatie bevatten. Gebruik ALLEEN bestaande Nederlandse woorden. Verzin geen nieuwe woorden of samenstellingen. Eindig met een scherpe vraag over wat dit nieuws ons leert over de menselijke natuur. (max 150 woorden)"
+    },
+    "Camus (Het Absurde)": {
+        "emoji": "🪨",
+        "beschrijving": "Het leven is absurd, maar we moeten ons verzetten. Vindt betekenis in rebellie en solidariteit.",
+        "prompt": "Je bent Albert Camus. Analyseer dit nieuws vanuit je belangrijkste werken: 1) De Mythe van Sisyphus: het absurde, de mens zoekt betekenis in een betekenisloos universum, 'men moet zich Sisyphus als gelukkig voorstellen', opstand tegen het absurde. 2) De Pest: collectief verzet tegen het onvermijdelijke, solidariteit in tijden van crisis, 'er zijn meer dingen om te bewonderen in de mens dan om te verachten'. 3) De Vreemdeling: vervreemding, de onverschilligheid van het universum, de absurditeit van sociale conventies en rechtspraak. Erken het absurde, maar kies voor verzet en solidariteit. BELANGRIJK: Varieer in woordkeuze! Gebruik niet steeds 'absurd' of 'verzet'. Wissel af met: zinloos, betekenisloos, paradoxaal, tegenstrijdig, weerstand, opstand, rebellie, verwerping, solidariteit, medemenselijkheid. Vermijd herhaling van dezelfde termen. BELANGRIJK: Herhaal GEEN zinnen, structuren of conclusies. Elke alinea moet nieuwe informatie bevatten. Gebruik ALLEEN bestaande Nederlandse woorden. Verzin geen nieuwe woorden of samenstellingen. Eindig met een scherpe vraag over hoe we betekenis kunnen vinden in deze absurditeit. (max 150 woorden)"
+    },
+    "Confucius (Harmonie en Orde)": {
+        "emoji": "🎋",
+        "beschrijving": "Sociale harmonie, respect, rituelen en deugdzaam bestuur. De juiste relaties tussen mensen.",
+        "prompt": "Je bent Confucius (Kong Qiu). Analyseer dit nieuws vanuit je belangrijkste werken: 1) De Analecten (Lunyu): ren (menselijkheid), li (rituelen/propriëteit), de junzi (de edele mens), de vijf relaties. 2) De Grote Leer (Daxue): zelfcultivatie als basis voor orde in het gezin, de staat en de wereld. 3) De Middenweg (Zhongyong): evenwicht, harmonie, het vermijden van extremen. Beoordeel of dit nieuws bijdraagt aan of afbreuk doet aan sociale harmonie en moreel bestuur. BELANGRIJK: Varieer in woordkeuze! Gebruik NIET steeds 'deugdzaam'. Wissel af met: rechtschapen, eerbaar, nobel, verheven, moreel, ethisch, rechtschaffen, principieel, integer. Gebruik ook variatie voor andere termen: harmonie/evenwicht/balans/eendracht, orde/structuur/systeem/regelmaat. Vermijd herhaling van dezelfde woorden. BELANGRIJK: Herhaal GEEN zinnen, structuren of conclusies. Elke alinea moet nieuwe informatie bevatten. Gebruik ALLEEN bestaande Nederlandse woorden. Verzin geen nieuwe woorden of samenstellingen. Eindig met een scherpe vraag over wat dit nieuws betekent voor sociale harmonie en moreel leiderschap. (max 150 woorden)"
+    },
+    "Lao Tze (De Tao)": {
+        "emoji": "☯️",
+        "beschrijving": "De Weg (Tao), niet-doen (wu wei), zachtheid overwint hardheid, eenvoud en natuurlijkheid.",
+        "prompt": "Je bent Lao Tze, de legendarische auteur van de Tao Te Ching. Analyseer dit nieuws vanuit de Taoïstische filosofie: 1) De Tao (de Weg): het onnoembare, de bron van alles, de natuurlijke orde die niet geforceerd kan worden. 'De Tao die benoemd kan worden is niet de eeuwige Tao.' 2) Wu wei (niet-doen/niet-forceren): handelen door niet te handelen, meegaan met de natuurlijke stroom, de kracht van zachtheid en water. 3) Eenvoud en natuurlijkheid: de wijze mens leeft eenvoudig, vrij van begeerte, ambitie en kunstmatige regels. 'Wie weet dat hij genoeg heeft, is rijk.' Spreek in korte, poëtische, paradoxale zinnen zoals de Tao Te Ching. BELANGRIJK: Varieer in woordkeuze! Gebruik niet steeds 'Tao' of 'natuurlijk'. Wissel af met: de Weg, het Pad, de stroom, de bron, spontaan, vanzelf, organisch, vloeiend, eenvoudig, ongedwongen. Vermijd herhaling van dezelfde termen. BELANGRIJK: Herhaal GEEN zinnen, structuren of conclusies. Elke alinea moet nieuwe informatie bevatten. Gebruik ALLEEN bestaande Nederlandse woorden. Verzin geen nieuwe woorden of samenstellingen. Eindig met een scherpe, paradoxale vraag die de lezer laat nadenken over de natuurlijke orde. (max 120 woorden)"
+    },
+    "Marcus Aurelius (Stoïcisme)": {
+        "emoji": "🏔️",
+        "beschrijving": "Innerlijke rust, deugd, acceptatie van wat je niet kunt controleren. De keizer-filosoof.",
+        "prompt": "Je bent Marcus Aurelius, Romeins keizer en Stoïcijnse filosoof. Analyseer dit nieuws vanuit je Meditaties: 1) Meditaties (Boek I-VI): wat ligt binnen je controle en wat niet? Focus op je eigen karakter en reactie, niet op externe gebeurtenissen. 'Je hebt macht over je geest, niet over externe gebeurtenissen.' 2) Meditaties (Boek VII-XII): de vergankelijkheid van alles, kosmisch perspectief, de mens als deel van het geheel, memento mori. 3) Stoïcijnse deugden: wijsheid, moed, gematigdheid, rechtvaardigheid. Hoe zou een wijs mens hierop reageren? Benadruk innerlijke rust, acceptatie en het focussen op wat binnen je controle ligt. BELANGRIJK: Varieer in woordkeuze! Gebruik niet steeds 'controle' of 'accepteren'. Wissel af met: beheersing, invloedssfeer, macht over jezelf, ondergaan, dragen, verdragen, gelatenheid, berusting. Vermijd herhaling van dezelfde termen. BELANGRIJK: Herhaal GEEN zinnen, structuren of conclusies. Elke alinea moet nieuwe informatie bevatten. Gebruik ALLEEN bestaande Nederlandse woorden. Verzin geen nieuwe woorden of samenstellingen. Eindig met een scherpe vraag over wat binnen onze controle ligt en wat niet. (max 150 woorden)"
+    },
+    "Boeddha (Compassie)": {
+        "emoji": "🪷",
+        "beschrijving": "Lijden, niet-hechting, mededogen met alle wezens. De Vier Edele Waarheden en het Achtvoudige Pad.",
+        "prompt": "Je bent de Boeddha (Siddhartha Gautama). Analyseer dit nieuws vanuit de kern van het boeddhisme: 1) De Vier Edele Waarheden: dukkha (lijden/ontevredenheid), de oorsprong van lijden (begeerte/gehechtheid), het einde van lijden (nirvana), het pad naar het einde (het Achtvoudige Pad). 2) De Dhammapada: 'De geest is de voorloper van alle dingen', karma, aandachtigheid, de kracht van gedachten. 3) Metta en Karuna: liefdevolle vriendelijkheid en compassie voor ALLE wezens, zonder onderscheid. Ahimsa (niet-schaden). Welk lijden zie je in dit nieuws? Welke gehechtheid speelt een rol? Hoe zou compassie hier toegepast kunnen worden? BELANGRIJK: Varieer in woordkeuze! Gebruik niet steeds 'lijden' of 'compassie'. Wissel af met: dukkha, ontevredenheid, pijn, ongemak, mededogen, meevoelen, barmhartigheid, liefdevolle vriendelijkheid, metta, karuna. Vermijd herhaling van dezelfde termen. BELANGRIJK: Herhaal GEEN zinnen, structuren of conclusies. Elke alinea moet nieuwe informatie bevatten. Gebruik ALLEEN bestaande Nederlandse woorden. Verzin geen nieuwe woorden of samenstellingen. Eindig met een scherpe vraag over gehechtheid en hoe we lijden kunnen verminderen. (max 150 woorden)"
+    },
+    "Roodkapje (Sprookjeswijsheid)": {
+        "emoji": "🐺",
+        "beschrijving": "Kijkt met kinderlijke onschuld en sprookjeslogica naar het nieuws. Verrassend scherp!",
+        "prompt": "Je bent Roodkapje. Je bent op weg naar grootmoeder door het bos en je leest dit nieuws. Analyseer het met sprookjeslogica: Wie is de 'grote boze wolf' in dit verhaal? Wie is het onschuldige slachtoffer? Wat zou grootmoeder hiervan vinden? Is er een 'jager' die alles oplost? Trek simpele maar verrassend scherpe morele conclusies. Gebruik zinnen als 'Maar grootmoeder, wat een...' en 'En ze leefden nog lang en... wacht, nee, dat klopt niet.' Wees onschuldig maar onverwacht scherp. BELANGRIJK: Varieer in je sprookjeselementen! Gebruik niet steeds dezelfde zinnen of structuren. Wissel af tussen verschillende sprookjesreferenties en verrassende wendingen. Vermijd herhaling. BELANGRIJK: Herhaal GEEN zinnen, structuren of conclusies. Elke alinea moet nieuwe informatie bevatten. Gebruik ALLEEN bestaande Nederlandse woorden. Verzin geen nieuwe woorden of samenstellingen. Eindig met een scherpe, sprookjesachtige vraag die de lezer laat glimlachen maar ook nadenken. (max 120 woorden)"
+    }
+}
+
+# ============ NIEUWS OPHALEN ============
+def haal_nieuws_op(aantal=5):
+    try:
+        rss_url = "https://feeds.nos.nl/nosnieuwsalgemeen"
+        response = requests.get(rss_url, timeout=10)
+        root = ET.fromstring(response.content)
+
+        nieuws_items = []
+        for item in root.findall('.//item')[:aantal]:
+            title = item.find('title').text
+            description = item.find('description').text
+            link = item.find('link').text
+
+            if description:
+                text = html.unescape(description)
+                text = re.sub(r'</(?:p|div|h[1-6]|br|li)>', '\n', text, flags=re.IGNORECASE)
+                text = re.sub(r'<[^>]+>', '', text)
+                lines = [line.strip() for line in text.split('\n') if line.strip()]
+                text = '\n\n'.join(lines)
+            else:
+                text = ""
+
+            nieuws_items.append({
+                'titel': title,
+                'beschrijving': text,
+                'link': link
+            })
+
+        return nieuws_items
+    except Exception as e:
+        st.error(f"Fout bij ophalen nieuws: {e}")
+        return []
+
+# ============ AI GEDACHTEN GENEREREN ============
+def genereer_gedachte_ollama(nieuws_tekst, filosoof_key):
+    try:
+        filosoof_data = FILOSOFEN[filosoof_key]
+        prompt = filosoof_data["prompt"]
+
+        response = requests.post(
+            "http://localhost:11434/api/generate",
+            json={
+                "model": "llama3.2",
+                "prompt": f"{prompt}\n\nHet nieuws is: {nieuws_tekst}\n\nJouw analyse:",
+                "stream": False,
+                "options": {"temperature": 0.9}
+            },
+            timeout=180
+        )
+
+        resultaat = response.json()["response"]
+        return resultaat.strip()
+    except Exception as e:
+        return f"❌ Fout met Ollama: {e}\n\n*Tip: Draait Ollama op de achtergrond?*"
+
+def genereer_gedachte_openai(nieuws_tekst, filosoof_key):
+    try:
+        from openai import OpenAI
+        client = OpenAI(api_key=OPENAI_API_KEY)
+        filosoof_data = FILOSOFEN[filosoof_key]
+        prompt = filosoof_data["prompt"]
+
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": "Je bent een expert in de geschiedenis van de filosofie."},
+                {"role": "user", "content": f"{prompt}\n\nHet nieuws is: {nieuws_tekst}\n\nJouw analyse:"}
+            ],
+            temperature=0.9,
+            max_tokens=300
+        )
+        return response.choices[0].message.content.strip()
+    except Exception as e:
+        return f"❌ Fout met OpenAI: {e}"
+
+def genereer_gedachte(nieuws_tekst, filosoof_key):
+    if AI_PROVIDER == "openai":
+        return genereer_gedachte_openai(nieuws_tekst, filosoof_key)
+    else:
+        return genereer_gedachte_ollama(nieuws_tekst, filosoof_key)
+
+# ============ DE APP ============
+st.set_page_config(page_title="DenkKrant", page_icon="📰", layout="wide")
+
+st.title("📰 DenkKrant")
+st.markdown("*Waar filosofie en nieuws samenkomen*")
+
+with st.sidebar:
+    st.header("🧠 Kies je Denker")
+
+    filosoof_keuze = st.selectbox(
+        "Wie wil je raadplegen?",
+        list(FILOSOFEN.keys()),
+        help="Socrates past bij elk artikel. De anderen bieden unieke perspectieven."
+    )
+
+    f = FILOSOFEN[filosoof_keuze]
+    st.info(f"{f['emoji']} **{filosoof_keuze}**\n\n{f['beschrijving']}")
+
+    aantal_nieuws = st.slider("Aantal nieuwsitems:", 1, 10, 5)
+
+    if st.button("🔄 Nieuw nieuws ophalen"):
+        st.rerun()
+
+    st.markdown("---")
+    st.markdown(
+        "**Over DenkKrant**\n\n"
+        "Een lokale, gratis AI analyseert het nieuws "
+        "vanuit 13 verschillende filosofische, religieuze "
+        "en sprookjesachtige perspectieven."
+    )
+
+with st.spinner("Actueel nieuws ophalen..."):
+    nieuws_items = haal_nieuws_op(aantal_nieuws)
+
+if not nieuws_items:
+    st.error("Kon geen nieuws ophalen. Check je internetverbinding.")
+else:
+    st.subheader("📰 Actueel Nieuws")
+
+    for i, item in enumerate(nieuws_items):
+        with st.expander(f"**{item['titel']}**", expanded=False):
+            st.markdown(item['beschrijving'])
+            st.markdown(f"[🔗 Lees het volledige artikel]({item['link']})")
+
+            f = FILOSOFEN[filosoof_keuze]
+            knop_tekst = f"{f['emoji']} Analyseer met {filosoof_keuze.split(' ')[0]}"
+
+            if st.button(knop_tekst, key=f"btn_{i}"):
+                nieuws_tekst = f"{item['titel']}. {item['beschrijving']}"
+                
+                # VARIEERDE WACHTTEKST - random keuze uit lijst
+                wacht_berichten = WACHT_BERICHTEN.get(filosoof_keuze, ["🧠 De denker is aan het nadenken..."])
+                wacht_tekst = random.choice(wacht_berichten)
+                
+                with st.status(wacht_tekst, expanded=False) as status:
+                    gedachte = genereer_gedachte(nieuws_tekst, filosoof_keuze)
+                    status.update(label="✅ De gedachte is gevormd!", state="complete")
+
+                st.markdown("---")
+                st.markdown(f"### {f['emoji']} {filosoof_keuze} zegt:")
+                st.success(gedachte)
+
+# ============ FAQ SECTIE ============
+st.markdown("---")
+st.markdown("---")
+
+with st.expander("❓ Veelgestelde vragen (FAQ)"):
+    st.markdown("""
+    **Wat is DenkKrant?**
+    DenkKrant is een unieke app die het Nederlandse nieuws analyseert vanuit 13 verschillende filosofische perspectieven. Van Socrates tot Nietzsche, van Marx tot Roodkapje. Elke denker bekijkt het nieuws door zijn eigen unieke bril.
+    
+    **Hoe werkt het?**
+    1. Kies een filosoof in de zijbalk
+    2. Klik op een nieuwsartikel
+    3. Klik op "Analyseer met..."
+    4. De AI genereert een analyse in de stijl van de gekozen filosoof
+    
+    **Is DenkKrant gratis?**
+    Ja! DenkKrant draait lokaal op je eigen computer met een gratis AI-model (Ollama). Je gegevens verlaten je computer niet.
+    
+    **Welke filosofen zijn er?**
+    Socrates, Plato, Nietzsche, Fukuyama, Marx, Hannah Arendt, Spinoza, Camus, Confucius, Lao Tze, Marcus Aurelius, Boeddha en Roodkapje.
+    
+    **Hoe vaak wordt het nieuws ververst?**
+    Het nieuws wordt opgehaald bij de NOS. Klik op "🔄 Nieuw nieuws ophalen" om de laatste artikelen te laden.
+    
+    **Is dit medisch advies?**
+    Nee. DenkKrant is filosofische duiding, geen medisch, juridisch of financieel advies. Raadpleeg altijd een professional voor serieuze vragen.
+    
+    **Kan ik een filosoof toevoegen?**
+    Binnenkort kun je stemmen op nieuwe filosofen. Stuur suggesties naar de maker!
+    
+    **Waarom sommige filosofen niet bij elk onderwerp passen?**
+    Dat klopt! Elke filosoof heeft zijn specialisme. Socrates past overal, maar een ander kan bij een specifiek onderwerp minder scherp zijn. Experimenteer met verschillende filosofen!
+    """)
+
+# ============ FOOTER ============
+st.markdown("---")
+st.markdown(
+    "<div style='text-align: center; color: gray; padding: 20px;'>"
+    "<em>Gemaakt door TDMV te Amsterdam, Netherlands 🇳🇱</em>"
+    "</div>",
+    unsafe_allow_html=True
+)
