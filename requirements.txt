@@ -1,0 +1,8 @@
+streamlit
+requests
+Pillow
+python-dotenv
+edge-tts
+translators
+google-genai
+mollie-api-python
