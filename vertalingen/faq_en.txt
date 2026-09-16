@@ -1,0 +1,88 @@
+# 📜 The Soul of DenkKrant
+
+### What is the essence?
+DenkKrant is not a news app. It is a **mirror for the mind**.
+In a time when information overwhelms us, DenkKrant offers something radical: **space to think**.
+
+We believe that news is not meant to frighten us, but to help us *understand*. That philosophy is not meant to confuse us, but to *clarify*. And that the combination of both is a powerful instrument for the modern human.
+
+### How does it work?
+Every morning you open DenkKrant. You choose your source. Perhaps NOS for local news, perhaps The Guardian for the world, perhaps El País for Spanish perspectives, perhaps BBC Arabic for the richness of another script. You see the news as it is, unfiltered, in the language in which it was written.
+
+Then you choose a philosopher. You can choose from a rich palette of thinkers, from antiquity to modern times, from East to West, from fairy tales to mysticism.
+
+The philosopher reads the news, and instead of a summary, you get a **reflection**. A mirror that shows you what the news *really* means, beyond the surface, beyond the sensation, to the human condition that lies beneath.
+
+### What is the hierarchy of knowledge (Free, Premium & Gold)?
+Not all doors are open at the same time. Wisdom is revealed in layers, as in the ancient mystery schools.
+
+- **The Free Seeker** enters the antechamber. You have access to the three fundamental thinkers: Socrates who asks questions, Nietzsche who hammers, and Little Red Riding Hood who looks with childlike wonder. You get 3 analyses per day. Enough to taste, to discover if this is something for you.
+
+- **The Premium Thinker** steps into the great hall. You get access to a whole pantheon of voices: Plato's cave, Aristotle's logic, Marx's hammer, Arendt's warning, Spinoza's geometry, Camus' rebellion, Confucius' harmony, Lao Tze's water, Marcus Aurelius' peace, and Buddha's compassion. You get 15 analyses per day, can choose your favorite thinker, and your vote carries weight in the monthly elections.
+
+- **The Gold Philosopher** walks the inner sanctum. You get access to the rarest, most exclusive souls: from Pascal to Erasmus, from Bacon to Ficino, from Luther to Rousseau, from Belle van Zuylen to Hadewijch. You have unlimited analyses, access to all 43 thinkers, and your vote carries the heaviest weight in the great elections.
+
+### Why can I choose between NOS, NU.nl, RTL, AT5 or Al Jazeera?
+Because the truth often depends on the window through which you look outside. An event in Amsterdam (AT5) feels different than the same event viewed from a global perspective (Al Jazeera).
+
+DenkKrant offers you **twelve windows on the world**: NOS and Tweakers for the Netherlands, AT5 for Amsterdam, The Guardian for the United Kingdom, El País for Spain, Google News for France, Der Spiegel for Germany, Folha for Brazil, BBC Hindi for India, China News for the Middle Kingdom, BBC Arabic for the Arab world, and NPR for the United States.
+
+We don't force you into one source; we invite you to experience the dialectic of the news itself. And are you a true adventurer? Paste your own RSS feed in the manual field and explore the unknown corners of the internet.
+
+### The Two Paths of the Mind: Cloud (Gemini) vs. Local (Ollama)
+You have the power to choose the engine of wisdom.
+
+- **The Cloud (Google Gemini):** Lightning fast, lightweight, and always connected to the great universe of data. It is the path of lightning: fast, clear, but sometimes limited by the daily limits of the cosmos. If you are too eager, you must wait until the gods are replenished.
+
+- **Local (Ollama):** The quiet, contemplative path. The AI runs on your own machine. It is 100% private, unlimited, and sometimes just a bit slower. Choose this path if you have patience and want to let the cloud rest for a while.
+
+And for the true connoisseurs: in the sidebar you can **set up your own AI model**. Do you have a local Ollama installation with a specific model? Your own API endpoint? Fill it in, and DenkKrant will use your personal engine of wisdom.
+
+### What are those strange words with a superscript (Neologisms)?
+Sometimes language falls short. When thinkers encounter a concept that has no name yet, they forge a new word. These 'neologisms' are marked with a superscript (¹, ², ³). Look in the notes below the text for the exact definition.
+
+It is a tribute to the creativity of human thought. Just as Nietzsche created the 'Übermensch', or Derrida coined 'différance', our thinkers create new words to capture reality.
+
+### Can I also hear the thoughts?
+Yes. The written word is static, but the spoken proof is alive. We give male thinkers a male voice, and female ones a female voice.
+
+Put on your headphones, close your eyes, and let the wisdom sink in. It's as if Socrates himself comes to sit beside you, or Little Red Riding Hood tells you a fairy tale.
+
+### How do I share my enlightenment with the world?
+Click 'Download PNG'. We generate a beautiful, rectangular artwork (perfect for the modern agora, also known as LinkedIn or X). It has a subtle gradient and a border that reveals whether you have a Premium or Gold membership: gold for the initiated, silver for the advanced.
+
+Add your own comment, and send it out into the world via LinkedIn, X (Twitter), Facebook, WhatsApp, Telegram, or even Truth Social. Or copy the text and share it wherever you want.
+
+### How does the Great Monthly Election work?
+The democracy of the mind. Every month you can decide which new candidates are promoted to the active list, and which thinker must make way.
+
+Note a fundamental law: **Free thinkers are immortal; they cannot be voted out.** You only vote on the promotion or demotion of Premium and Gold candidates.
+
+On the first day of each month, the two most voted candidates become active, and the least voted thinker goes to the bench. It is a living ecosystem of wisdom, where the community determines which voices are most needed in the current times.
+
+### Can I choose my favorite thinker?
+Yes. As a Premium or Gold member you can set your favorite thinker. He then appears as an extra button with each news article, so you can consult his wisdom with one click.
+
+It's like having a personal mentor: always available, always sharp, always ready to interpret the news for you.
+
+### What is "Your philosophical journey"?
+At the bottom of the sidebar you see a counter: the number of analyses you have ever made. It is not a score, not a competition. It is a **reminder** of how far you have come.
+
+Each analysis is a step deeper into your own thinking. A stone on the path. A spark in the darkness.
+
+### Is this medical, legal or financial advice?
+Absolutely not. DenkKrant is an exercise in perspective, a philosophical interpretation and pure entertainment. If you have a broken leg, receive a summons, or want to invest your money, consult a professional.
+
+We only offer you the comfort and sharpness of thought. The rest is up to you.
+
+### Why so many languages?
+Because the world doesn't stop at the border. DenkKrant speaks your language, but reads the world in all languages. Dutch, English, Spanish, French, German, Portuguese, Hindi, Arabic, Chinese - each language is a window on reality.
+
+You don't need to speak Arabic to see the beauty of another script. You don't need to know Chinese to read what's happening in Beijing. The sources speak their own language, but the analysis speaks **your** language.
+
+That is the promise of DenkKrant: to understand the world in your own words.
+
+### Why DenkKrant?
+Because we believe that humans are more than consumers of information. That we don't just want to know what happens, but also **what it means**. That we don't just want to read, but also want to **think**.
+
+DenkKrant is not a product. It is an **invitation**. An invitation to pause every day, to look beyond the surface, to see the world as it really is - complex, beautiful, absurd, and always worth thinking about.

@@ -1,0 +1,88 @@
+# 📜 De Ziel van DenkKrant
+
+### Wat is de essentie?
+DenkKrant is geen nieuwsapp. Het is een **spiegel voor de geest**.
+In een tijd waarin informatie ons overspoelt, biedt DenkKrant iets radicaals: **ruimte om te denken**.
+
+Wij geloven dat nieuws niet bedoeld is om ons te laten schrikken, maar om ons te laten *begrijpen*. Dat filosofie niet bedoeld is om ons te verwarren, maar om ons te *verhelderen*. En dat de combinatie van beide een krachtig instrument is voor de moderne mens.
+
+### Hoe werkt het?
+Elke ochtend open je DenkKrant. Je kiest je bron. Misschien de NOS voor het lokale nieuws, misschien The Guardian voor de wereld, misschien El País voor Spaanse perspectieven, misschien BBC Arabic voor de rijkdom van een ander schrift. Je ziet het nieuws zoals het is, ongefilterd, in de taal waarin het geschreven is.
+
+Dan kies je een filosoof. Je kunt kiezen uit een rijk palet van denkers, van de oudheid tot de moderne tijd, van het Oosten tot het Westen, van sprookjes tot mystiek.
+
+De filosoof leest het nieuws, en in plaats van een samenvatting, krijg je een **reflectie**. Een spiegel die je laat zien wat het nieuws *echt* betekent, voorbij de oppervlakte, voorbij de sensatie, naar de menselijke conditie die eronder schuilt.
+
+### Wat is de hiërarchie van de kennis (Free, Premium & Gold)?
+Niet alle deuren staan tegelijk open. De wijsheid wordt onthuld in lagen, zoals bij de oude mysteriescholen.
+
+- **De Free Zoeker** betreedt het voorportaal. U heeft toegang tot de drie fundamentele denkers: Socrates die vragen stelt, Nietzsche die hamert, en Roodkapje die met kinderlijke verwondering kijkt. U krijgt 3 analyses per dag. Genoeg om te proeven, om te ontdekken of dit iets voor u is.
+
+- **De Premium Denker** stapt de grote zaal binnen. U krijgt toegang tot een heel pantheon aan stemmen: Plato's grot, Aristoteles' logica, Marx' hamer, Arendt's waarschuwing, Spinoza's geometrie, Camus' opstand, Confucius' harmonie, Lao Tze's water, Marcus Aurelius' rust, en Boeddha's compassie. U krijgt 15 analyses per dag, kunt uw favoriete denker kiezen, en uw stem heeft gewicht in de maandelijkse verkiezingen.
+
+- **De Gold Filosoof** bewandelt het innerlijke sanctum. U krijgt toegang tot de zeldzaamste, meest exclusieve zielen: van Pascal tot Erasmus, van Bacon tot Ficino, van Luther tot Rousseau, van Belle van Zuylen tot Hadewijch. U heeft onbeperkte analyses, toegang tot alle 43 denkers, en uw stem heeft het zwaarste gewicht in de grote verkiezingen.
+
+### Waarom kan ik kiezen tussen de NOS, NU.nl, RTL, AT5 of Al Jazeera?
+Omdat de waarheid vaak afhangt van het raam waardoor je naar buiten kijkt. Een gebeurtenis in Amsterdam (AT5) voelt anders dan dezelfde gebeurtenis bekeken vanuit een wereldwijd perspectief (Al Jazeera). 
+
+DenkKrant biedt u **twaalf vensters op de wereld**: NOS en Tweakers voor Nederland, AT5 voor Amsterdam, The Guardian voor het Verenigd Koninkrijk, El País voor Spanje, Google News voor Frankrijk, Der Spiegel voor Duitsland, Folha voor Brazilië, BBC Hindi voor India, China News voor het Middenrijk, BBC Arabic voor de Arabische wereld, en NPR voor de Verenigde Staten.
+
+Wij dwingen u niet tot één bron; wij nodigen u uit om de dialectiek van het nieuws zelf te ervaren. En bent u een ware avonturier? Plak uw eigen RSS-feed in het handmatige veld en verken de onbekende uithoeken van het internet.
+
+### De Twee Wegen van de Geest: Cloud (Gemini) vs. Lokaal (Ollama)
+U heeft de macht om de motor van de wijsheid te kiezen.
+
+- **De Cloud (Google Gemini):** Razendsnel, lichtvoetig en altijd verbonden met het grote universum van data. Het is de weg van de bliksem: snel, helder, maar soms beperkt door de dagelijkse limieten van de kosmos. Als u te gretig bent, moet u even wachten tot de goden zijn bijgevuld.
+
+- **Lokaal (Ollama):** De rustige, contemplatieve weg. De AI draait op uw eigen machine. Het is 100% privé, onbeperkt, en soms net iets langzamer. Kies deze weg als u geduld heeft en de cloud even wilt laten rusten.
+
+En voor de ware fijnproevers: in de zijbalk kunt u **uw eigen AI-model instellen**. Heeft u een lokale Ollama-installatie met een specifiek model? Een eigen API-endpoint? Vul het in, en DenkKrant gebruikt uw persoonlijke motor van wijsheid.
+
+### Wat zijn die vreemde woorden met een hoog cijfertje (Neologismen)?
+Soms schiet de taal tekort. Wanneer de denkers een concept tegenkomen dat nog geen naam heeft, smeden zij een nieuw woord. Deze 'neologismen' worden gemarkeerd met een superscript (¹, ², ³). Kijk in de noten onder de tekst voor de exacte definitie.
+
+Het is een eerbetoon aan de creativiteit van het menselijk denken. Zoals Nietzsche de 'Übermensch' schiep, of Derrida de 'différance' bedacht, zo creëren onze denkers nieuwe woorden om de werkelijkheid te vatten.
+
+### Kan ik de gedachten ook horen?
+Ja. Het geschreven woord is statisch, maar de gesproken proef is levend. Wij geven de mannelijke denkers een mannelijke stem, en de vrouwelijke een vrouwelijke stem. 
+
+Zet uw koptelefoon op, sluit uw ogen, en laat de wijsheid tot u doordringen. Het is alsof Socrates zelf naast u komt zitten, of Roodkapje u een sprookje vertelt.
+
+### Hoe deel ik mijn verlichting met de wereld?
+Klik op 'Download PNG'. Wij genereren dan een prachtig, rechthoekig kunstwerk (perfect voor het moderne agora, ook wel LinkedIn of X genoemd). Het heeft een subtiel kleurverloop en een rand die verraadt of u een Premium of Gold lidmaatschap bezit: goud voor de ingewijden, zilver voor de gevorderden.
+
+Voeg uw eigen commentaar toe, en stuur het de wereld in via LinkedIn, X (Twitter), Facebook, WhatsApp, Telegram, of zelfs Truth Social. Of kopieer de tekst en deel het waar u wilt.
+
+### Hoe werkt de Grote Maandelijkse Verkiezing?
+De democratie van de geest. Elke maand mag u bepalen welke nieuwe kandidaten worden gepromoveerd naar de actieve lijst, en welke denker plaats moet maken.
+
+Let op een fundamentele wet: **De Free denkers zijn onsterfelijk; zij kunnen niet weggestemd worden.** U stemt enkel over de promotie of degradatie van de Premium- en Gold-kandidaten.
+
+Op de eerste dag van elke maand worden de twee meest gestemde kandidaten actief, en de minst gestemde denker gaat naar de reservebank. Het is een levend ecosysteem van wijsheid, waar de gemeenschap bepaalt welke stemmen het hardst nodig zijn in het huidige tijdsgewricht.
+
+### Kan ik mijn favoriete denker kiezen?
+Ja. Als Premium of Gold lid kunt u uw favoriete denker instellen. Hij verschijnt dan als een extra knop bij elk nieuwsartikel, zodat u met één klik zijn wijsheid kunt raadplegen.
+
+Het is als het hebben van een persoonlijke mentor: altijd beschikbaar, altijd scherp, altijd klaar om het nieuws voor u te duiden.
+
+### Wat is "Jouw filosofische reis"?
+Onderaan de zijbalk ziet u een teller: het aantal analyses dat u ooit heeft gemaakt. Het is geen score, geen competitie. Het is een **herinnering** aan hoe ver u bent gekomen.
+
+Elke analyse is een stap dieper in uw eigen denken. Een steen op het pad. Een vonk in de duisternis.
+
+### Is dit medisch, juridisch of financieel advies?
+Absoluut niet. DenkKrant is een oefening in perspectief, een filosofische duiding en puur entertainment. Als u een gebroken been heeft, een dagvaarding ontvangt, of uw geld wilt beleggen, raadpleeg dan een professional.
+
+Wij bieden u slechts de troost en de scherpte van de gedachte. De rest is aan u.
+
+### Waarom zoveel talen?
+Omdat de wereld niet ophoudt bij de grens. DenkKrant spreekt uw taal, maar leest de wereld in alle talen. Nederlands, Engels, Spaans, Frans, Duits, Portugees, Hindi, Arabisch, Chinees - elke taal is een venster op de werkelijkheid.
+
+U hoeft geen Arabisch te spreken om de schoonheid van een ander schrift te zien. U hoeft geen Chinees te kennen om te lezen wat er in Beijing gebeurt. De bronnen spreken hun eigen taal, maar de analyse spreekt **uw** taal.
+
+Dat is de belofte van DenkKrant: de wereld begrijpen in uw eigen woorden.
+
+### Waarom DenkKrant?
+Omdat we geloven dat de mens meer is dan een consument van informatie. Dat we niet alleen willen weten wat er gebeurt, maar ook **wat het betekent**. Dat we niet alleen willen lezen, maar ook willen **denken**.
+
+DenkKrant is geen product. Het is een **uitnodiging**. Een uitnodiging om elke dag even stil te staan, om voorbij de oppervlakte te kijken, om de wereld te zien zoals hij echt is - complex, mooi, absurd, en altijd het denken waard.

@@ -1,0 +1,88 @@
+# 📜 L'Âme de DenkKrant
+
+### Quelle est l'essence ?
+DenkKrant n'est pas une application d'actualités. C'est un **miroir pour l'esprit**.
+À une époque où l'information nous submerge, DenkKrant offre quelque chose de radical : **l'espace pour penser**.
+
+Nous croyons que les nouvelles ne sont pas faites pour nous effrayer, mais pour nous faire *comprendre*. Que la philosophie n'est pas faite pour nous confondre, mais pour nous *éclairer*. Et que la combinaison des deux est un instrument puissant pour l'homme moderne.
+
+### Comment ça marche ?
+Chaque matin, vous ouvrez DenkKrant. Vous choisissez votre source. Peut-être la NOS pour les nouvelles locales, peut-être The Guardian pour le monde, peut-être El País pour les perspectives espagnoles, peut-être BBC Arabic pour la richesse d'une autre écriture. Vous voyez les nouvelles telles qu'elles sont, sans filtre, dans la langue dans laquelle elles sont écrites.
+
+Ensuite, vous choisissez un philosophe. Vous pouvez choisir parmi une riche palette de penseurs, de l'Antiquité à l'époque moderne, de l'Orient à l'Occident, des contes de fées à la mystique.
+
+Le philosophe lit les nouvelles, et au lieu d'un résumé, vous obtenez une **réflexion**. Un miroir qui vous montre ce que les nouvelles *véritablement* signifient, au-delà de la surface, au-delà de la sensation, vers la condition humaine qui se cache en dessous.
+
+### Quelle est la hiérarchie du savoir (Free, Premium & Gold) ?
+Toutes les portes ne sont pas ouvertes en même temps. La sagesse se révèle par couches, comme dans les anciennes écoles de mystères.
+
+- **Le Chercheur Free** entre dans l'antichambre. Vous avez accès aux trois penseurs fondamentaux : Socrate qui pose des questions, Nietzsche qui martèle, et Le Petit Chaperon rouge qui regarde avec un émerveillement enfantin. Vous obtenez 3 analyses par jour. Assez pour goûter, pour découvrir si cela vous convient.
+
+- **Le Penseur Premium** entre dans la grande salle. Vous obtenez accès à tout un panthéon de voix : la grotte de Platon, la logique d'Aristote, le marteau de Marx, l'avertissement d'Arendt, la géométrie de Spinoza, la révolte de Camus, l'harmonie de Confucius, l'eau de Lao Tseu, la sérénité de Marc Aurèle, et la compassion du Bouddha. Vous obtenez 15 analyses par jour, pouvez choisir votre penseur favori, et votre vote a du poids dans les élections mensuelles.
+
+- **Le Philosophe Gold** pénètre dans le sanctuaire intérieur. Vous obtenez accès aux âmes les plus rares et exclusives : de Pascal à Érasme, de Bacon à Ficin, de Luther à Rousseau, de Belle van Zuylen à Hadewijch. Vous avez des analyses illimitées, accès aux 43 penseurs, et votre vote a le plus grand poids dans les grandes élections.
+
+### Pourquoi puis-je choisir entre NOS, NU.nl, RTL, AT5 ou Al Jazeera ?
+Parce que la vérité dépend souvent de la fenêtre par laquelle vous regardez dehors. Un événement à Amsterdam (AT5) se ressent différemment que le même événement vu d'une perspective mondiale (Al Jazeera).
+
+DenkKrant vous offre **douze fenêtres sur le monde** : NOS et Tweakers pour les Pays-Bas, AT5 pour Amsterdam, The Guardian pour le Royaume-Uni, El País pour l'Espagne, Google News pour la France, Der Spiegel pour l'Allemagne, Folha pour le Brésil, BBC Hindi pour l'Inde, China News pour l'Empire du Milieu, BBC Arabic pour le monde arabe, et NPR pour les États-Unis.
+
+Nous ne vous imposons pas une seule source ; nous vous invitons à expérimenter vous-même la dialectique des nouvelles. Et êtes-vous un véritable aventurier ? Collez votre propre flux RSS dans le champ manuel et explorez les coins inconnus d'Internet.
+
+### Les Deux Voies de l'Esprit : Cloud (Gemini) vs. Local (Ollama)
+Vous avez le pouvoir de choisir le moteur de la sagesse.
+
+- **Le Cloud (Google Gemini):** Rapide comme l'éclair, léger et toujours connecté au grand univers des données. C'est la voie de l'éclair : rapide, claire, mais parfois limitée par les limites quotidiennes du cosmos. Si vous êtes trop avide, vous devrez attendre que les dieux soient replenished.
+
+- **Local (Ollama):** La voie calme et contemplative. L'IA fonctionne sur votre propre machine. C'est 100% privé, illimité, et parfois juste un peu plus lent. Choisissez cette voie si vous avez de la patience et voulez laisser le cloud se reposer un moment.
+
+Et pour les vrais connaisseurs : dans la barre latérale, vous pouvez **configurer votre propre modèle d'IA**. Avez-vous une installation locale d'Ollama avec un modèle spécifique ? Un point de terminaison API personnalisé ? Remplissez-le, et DenkKrant utilisera votre moteur personnel de sagesse.
+
+### Que sont ces mots étranges avec un petit chiffre en haut (Néologismes) ?
+Parfois, le langage manque. Lorsque les penseurs rencontrent un concept qui n'a pas encore de nom, ils forgent un nouveau mot. Ces 'néologismes' sont marqués d'un exposant (¹, ², ³). Consultez les notes sous le texte pour la définition exacte.
+
+C'est un hommage à la créativité de la pensée humaine. Comme Nietzsche a créé le 'Surhomme', ou Derrida a inventé la 'différance', nos penseurs créent de nouveaux mots pour saisir la réalité.
+
+### Puis-je aussi entendre les pensées ?
+Oui. Le mot écrit est statique, mais l'épreuve parlée est vivante. Nous donnons aux penseurs masculins une voix masculine, et aux féminines une voix féminine.
+
+Mettez vos écouteurs, fermez les yeux, et laissez la sagesse vous pénétrer. C'est comme si Socrate lui-même venait s'asseoir à côté de vous, ou si Le Petit Chaperon rouge vous racontait un conte.
+
+### Comment partager mon illumination avec le monde ?
+Cliquez sur 'Télécharger PNG'. Nous générons alors une magnifique œuvre d'art rectangulaire (parfaite pour l'agora moderne, aussi appelé LinkedIn ou X). Elle a un subtil dégradé de couleurs et une bordure qui révèle si vous possédez un abonnement Premium ou Gold : or pour les initiés, argent pour les avancés.
+
+Ajoutez votre propre commentaire, et envoyez-le dans le monde via LinkedIn, X (Twitter), Facebook, WhatsApp, Telegram, ou même Truth Social. Ou copiez le texte et partagez-le où vous voulez.
+
+### Comment fonctionne la Grande Élection Mensuelle ?
+La démocratie de l'esprit. Chaque mois, vous pouvez déterminer quels nouveaux candidats sont promus à la liste active, et quel penseur doit céder sa place.
+
+Notez une loi fondamentale : **Les penseurs Free sont immortels ; ils ne peuvent pas être éliminés par vote.** Vous votez uniquement sur la promotion ou la rétrogradation des candidats Premium et Gold.
+
+Le premier jour de chaque mois, les deux candidats les plus votés deviennent actifs, et le penseur le moins voté va sur le banc de touche. C'est un écosystème vivant de sagesse, où la communauté détermine quelles voix sont le plus nécessaires dans le contexte actuel.
+
+### Puis-je choisir mon penseur favori ?
+Oui. En tant que membre Premium ou Gold, vous pouvez définir votre penseur favori. Il apparaîtra alors comme un bouton supplémentaire à chaque article de nouvelles, afin que vous puissiez consulter sa sagesse en un clic.
+
+C'est comme avoir un mentor personnel : toujours disponible, toujours perspicace, toujours prêt à interpréter les nouvelles pour vous.
+
+### Qu'est-ce que "Votre voyage philosophique" ?
+En bas de la barre latérale, vous voyez un compteur : le nombre d'analyses que vous avez créées. Ce n'est pas un score, pas une compétition. C'est un **rappel** de jusqu'où vous êtes arrivé.
+
+Chaque analyse est un pas plus profond dans votre propre pensée. Une pierre sur le chemin. Une étincelle dans l'obscurité.
+
+### Est-ce un conseil médical, juridique ou financier ?
+Absolument pas. DenkKrant est un exercice de perspective, une interprétation philosophique et du pur divertissement. Si vous avez une jambe cassée, recevez une assignation, ou voulez investir votre argent, consultez un professionnel.
+
+Nous vous offrons seulement le réconfort et l'acuité de la pensée. Le reste vous appartient.
+
+### Pourquoi autant de langues ?
+Parce que le monde ne s'arrête pas à la frontière. DenkKrant parle votre langue, mais lit le monde dans toutes les langues. Néerlandais, anglais, espagnol, français, allemand, portugais, hindi, arabe, chinois - chaque langue est une fenêtre sur la réalité.
+
+Vous n'avez pas besoin de parler arabe pour voir la beauté d'une autre écriture. Vous n'avez pas besoin de connaître le chinois pour lire ce qui se passe à Pékin. Les sources parlent leur propre langue, mais l'analyse parle **votre** langue.
+
+C'est la promesse de DenkKrant : comprendre le monde dans vos propres mots.
+
+### Pourquoi DenkKrant ?
+Parce que nous croyons que l'homme est plus qu'un consommateur d'informations. Que nous ne voulons pas seulement savoir ce qui se passe, mais aussi **ce que cela signifie**. Que nous ne voulons pas seulement lire, mais aussi **penser**.
+
+DenkKrant n'est pas un produit. C'est une **invitation**. Une invitation à s'arrêter un moment chaque jour, à regarder au-delà de la surface, à voir le monde tel qu'il est vraiment - complexe, beau, absurde, et toujours digne d'être pensé.
