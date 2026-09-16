@@ -1073,7 +1073,16 @@ elif menu == t["sidebar_news"]:
                         f_reactie = ALLE_FILOSOFEN.get(reactie["filosoof"], {})
                         emoji = f_reactie.get("emoji", "💭")
                         bg_color = "#1e3a5f" if idx % 2 == 0 else "#2d1b4e"
-                        st.markdown(f"<div style='background-color: {bg_color}; padding: 15px; border-radius: 10px; margin: 10px 0;'><h4>{emoji} {reactie['filosoof']}</h4><p>{reactie['gedachte']}</p></div>", unsafe_allow_html=True)
+                        
+                        # FIX: Vervang enters door <br> voor HTML, en voeg word-wrap toe voor mobiel
+                        gedachte_html = reactie['gedachte'].replace('\n', '<br>')
+                        st.markdown(
+                            f"<div style='background-color: {bg_color}; padding: 15px; border-radius: 10px; margin: 10px 0; word-wrap: break-word; overflow-wrap: break-word;'>"
+                            f"<h4 style='margin-top:0;'>{emoji} {reactie['filosoof']}</h4>"
+                            f"<p style='margin-bottom:0; line-height: 1.5;'>{gedachte_html}</p>"
+                            f"</div>", 
+                            unsafe_allow_html=True
+                        )
                     
                     if can_analyze():
                         laatste_filosoof = dialoog[-1]["filosoof"] if dialoog else filosoof
