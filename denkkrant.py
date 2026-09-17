@@ -899,8 +899,10 @@ with st.sidebar:
     # ==========================================
     # JURIDISCHE INFORMATIE
     # ==========================================
-    with st.expander("📜 Juridisch"):
+    with st.expander("📜 Juridisch / Legal"):
         st.markdown("""
+## 🇳🇱 Nederlands
+
 ### 🔒 Privacyverklaring
 **DenkKrant respecteert uw privacy.**  
 Wij verzamelen alleen de minimale gegevens die nodig zijn om de app te laten werken: een pseudonieme sessiecode, uw taalvoorkeur en uw lidmaatschapstatus. Wij slaan geen namen, e-mailadressen, locatiegegevens of betalingsinformatie op. Betalingen worden veilig verwerkt door Mollie.
@@ -942,7 +944,7 @@ Voor vragen of opmerkingen kunt u contact opnemen via:
 2. Je mag gegenereerde analyses delen op sociale media met duidelijke vermelding van DenkKrant als bron.
 
 **ARTIKEL 6 - AANSPRAKELIJKHEID**  
-1. DenkKrant levert de dienst "as is" en is niet aanspakelijk voor schade door gebruik van de app.  
+1. DenkKrant levert de dienst "as is" en is niet aansprakelijk voor schade door gebruik van de app.  
 2. AI-gegenereerde analyses zijn interpretaties, geen feiten.  
 3. Onze totale aansprakelijkheid is beperkt tot het bedrag dat je de afgelopen maand hebt betaald.
 
@@ -957,6 +959,67 @@ Voor vragen of opmerkingen kunt u contact opnemen via:
 
 **ARTIKEL 10 - CONTACT**  
 Vragen? Email naar: **camerathomas@gmail.com**
+
+---
+
+## 🇬🇧 English
+
+### 🔒 Privacy Policy
+**DenkKrant respects your privacy.**  
+We only collect the minimal data necessary to make the app work: a pseudonymous session code, your language preference, and your membership status. We do not store names, email addresses, location data, or payment information. Payments are securely processed by Mollie.
+
+For questions or comments, please contact:  
+📧 **camerathomas@gmail.com**
+
+---
+
+### 📋 Terms and Conditions
+*Last updated: September 17, 2026*
+
+**ARTICLE 1 - DEFINITIONS**  
+1. DenkKrant: the web application that analyzes news articles from philosophical perspectives.  
+2. User: anyone who visits the app.  
+3. Membership: the paid access levels (Premium or Gold).
+
+**ARTICLE 2 - THE SERVICE**  
+1. DenkKrant provides philosophical analyses of news articles using AI.  
+2. Free users can perform up to 3 analyses per day.  
+3. Premium users can perform up to 15 analyses per day.  
+4. Gold users have unlimited access to analyses.
+
+**ARTICLE 3 - MEMBERSHIPS AND PAYMENT**  
+1. Premium: €5 per week, €10 per month, €30 per year.  
+2. Gold: €8 per week, €16 per month, €48 per year.  
+3. Payments are securely processed via Mollie (iDEAL, credit card, PayPal).  
+4. Subscriptions are **not** automatically renewed. After the period expires, access ends automatically; no invoice is sent and you must purchase a new membership if desired.  
+5. No refunds are provided for already elapsed periods.
+
+**ARTICLE 4 - USER OBLIGATIONS**  
+1. You are 16 years of age or older.  
+2. You do not use the app for illegal purposes.  
+3. You do not attempt to hack or abuse the app.  
+4. You do not share hateful or discriminatory content.
+
+**ARTICLE 5 - INTELLECTUAL PROPERTY**  
+1. All content in DenkKrant (except third-party news articles) is owned by DenkKrant.  
+2. You may share generated analyses on social media with clear attribution to DenkKrant as the source.
+
+**ARTICLE 6 - LIABILITY**  
+1. DenkKrant provides the service "as is" and is not liable for damage caused by using the app.  
+2. AI-generated analyses are interpretations, not facts.  
+3. Our total liability is limited to the amount you have paid in the past month.
+
+**ARTICLE 7 - EXPIRATION AND NON-RENEWAL**  
+1. Because memberships do not automatically renew, cancellation by the user is not necessary. Access expires automatically after the paid period.
+
+**ARTICLE 8 - CHANGES**  
+1. We may change these terms. In case of significant changes, we will inform you. By continuing to use the app, you agree to the new terms.
+
+**ARTICLE 9 - APPLICABLE LAW**  
+1. These terms are governed by Dutch law. Disputes will be submitted to the competent court in Amsterdam.
+
+**ARTICLE 10 - CONTACT**  
+Questions? Email: **camerathomas@gmail.com**
         """)
     
     st.markdown("---")
