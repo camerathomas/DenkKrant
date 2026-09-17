@@ -736,8 +736,8 @@ with st.sidebar:
                 st.session_state.membership_tier = "premium"
                 st.success(t["premium_welcome"])
                 st.rerun()
-        else:
-            st.error("ongeldige code")                    
+            else:
+                st.error("ongeldige code")                    
     st.markdown("---")
     st.markdown("### 💳 Upgrade met Mollie")
     st.caption("Testmodus: geen echt geld")
