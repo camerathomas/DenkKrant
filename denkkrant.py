@@ -895,6 +895,71 @@ with st.sidebar:
         st.session_state.menu_keuze = [t["sidebar_home"], t["sidebar_news"], t["sidebar_philosophers"]].index(menu)
 
     st.markdown("---")
+    
+    # ==========================================
+    # JURIDISCHE INFORMATIE
+    # ==========================================
+    with st.expander("📜 Juridisch"):
+        st.markdown("""
+### 🔒 Privacyverklaring
+**DenkKrant respecteert uw privacy.**  
+Wij verzamelen alleen de minimale gegevens die nodig zijn om de app te laten werken: een pseudonieme sessiecode, uw taalvoorkeur en uw lidmaatschapstatus. Wij slaan geen namen, e-mailadressen, locatiegegevens of betalingsinformatie op. Betalingen worden veilig verwerkt door Mollie.
+
+Voor vragen of opmerkingen kunt u contact opnemen via:  
+📧 **camerathomas@gmail.com**
+
+---
+
+### 📋 Algemene Voorwaarden
+*Laatst bijgewerkt: 17 september 2026*
+
+**ARTIKEL 1 - DEFINITIES**  
+1. DenkKrant: de webapplicatie die nieuwsartikelen analyseert vanuit filosofische perspectieven.  
+2. Gebruiker: iedereen die de app bezoekt.  
+3. Lidmaatschap: de betaalde toegangsniveaus (Premium of Gold).
+
+**ARTIKEL 2 - DE DIENST**  
+1. DenkKrant biedt filosofische analyses van nieuwsartikelen met behulp van AI.  
+2. Free-gebruikers kunnen maximaal 3 analyses per dag uitvoeren.  
+3. Premium-gebruikers kunnen maximaal 15 analyses per dag uitvoeren.  
+4. Gold-gebruikers hebben onbeperkte toegang tot analyses.
+
+**ARTIKEL 3 - LIDMAATSCHAPPEN EN BETALING**  
+1. Premium: €5 per week, €10 per maand, €30 per jaar.  
+2. Gold: €8 per week, €16 per maand, €48 per jaar.  
+3. Betalingen verlopen veilig via Mollie (iDEAL, creditcard, PayPal).  
+4. Abonnementen worden **niet** automatisch verlengd. Na de verstreken periode vervalt de toegang vanzelf; er wordt geen rekening gestuurd en u moet opnieuw een lidmaatschap kopen indien gewenst.  
+5. Er zijn geen terugbetalingen voor reeds verstreken periodes.
+
+**ARTIKEL 4 - GEBRUIKERSVERPLICHTINGEN**  
+1. Je bent 16 jaar of ouder.  
+2. Je gebruikt de app niet voor illegale doeleinden.  
+3. Je probeert de app niet te hacken of te misbruiken.  
+4. Je deelt geen haatzaaiende of discriminerende content.
+
+**ARTIKEL 5 - INTELLECTUEEL EIGENDOM**  
+1. Alle content in DenkKrant (behalve nieuwsartikelen van derden) is eigendom van DenkKrant.  
+2. Je mag gegenereerde analyses delen op sociale media met duidelijke vermelding van DenkKrant als bron.
+
+**ARTIKEL 6 - AANSPRAKELIJKHEID**  
+1. DenkKrant levert de dienst "as is" en is niet aanspakelijk voor schade door gebruik van de app.  
+2. AI-gegenereerde analyses zijn interpretaties, geen feiten.  
+3. Onze totale aansprakelijkheid is beperkt tot het bedrag dat je de afgelopen maand hebt betaald.
+
+**ARTIKEL 7 - AFLOOP EN NIET-VERLENGING**  
+1. Omdat lidmaatschappen niet automatisch verlengen, is opzegging door de gebruiker niet nodig. Toegang vervalt automatisch na de betaalde periode.
+
+**ARTIKEL 8 - WIJZIGINGEN**  
+1. We kunnen deze voorwaarden wijzigen. Bij ingrijpende wijzigingen informeren we je. Door de app te blijven gebruiken, ga je akkoord met de nieuwe voorwaarden.
+
+**ARTIKEL 9 - TOEPASSELIJK RECHT**  
+1. Op deze voorwaarden is Nederlands recht van toepassing. Geschillen worden voorgelegd aan de bevoegde rechter in Amsterdam.
+
+**ARTIKEL 10 - CONTACT**  
+Vragen? Email naar: **camerathomas@gmail.com**
+        """)
+    
+    st.markdown("---")
     st.markdown(t["sidebar_by_tdmv"])
     st.markdown(t["sidebar_amsterdam"])
 
