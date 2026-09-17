@@ -296,6 +296,13 @@ def init_database():
     c.execute('''CREATE TABLE IF NOT EXISTS ai_instellingen (
         id INTEGER PRIMARY KEY AUTOINCREMENT, ollama_url TEXT, model_naam TEXT, api_key TEXT,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP)''')
+    c.execute('''CREATE TABLE IF NOT EXISTS users (
+        user_id TEXT PRIMARY KEY,
+        membership_tier TEXT NOT NULL DEFAULT 'free',
+        activation_code TEXT UNIQUE,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        last_payment_at DATETIME
+    )''')    
     conn.commit()
     conn.close()
 
@@ -371,22 +378,58 @@ def maak_mollie_betaling(tier="premium"):
     }
     
     bedrag = bedragen.get(tier, "5.00")
+    activation_code = genereer_activation_code(tier)
     
     try:
         payment = client.payments.create({
             'amount': {'currency': 'EUR', 'value': bedrag},
             'description': f'DenkKrant {tier.capitalize()} upgrade',
-            'redirectUrl': 'https://denkkrant.streamlit.app/?payment=success',
+            'redirectUrl': f'https://denkkrant.streamlit.app/?payment=success&code={activation_code}',
             'webhookUrl': 'https://denkkrant.streamlit.app/?webhook=mollie',
-            'metadata': {'tier': tier, 'user_id': st.session_state.user_id}
+            'metadata': {'tier': tier, 'user_id': st.session_state.user_id, 'activation_code': activation_code}
         })
-        return payment['_links']['checkout']['href']
+        checkout_url = payment['_links']['checkout']['href']
+        return checkout_url, activation_code
     except Exception as e:
         st.error(f"Mollie betaling fout: {e}")
-        return None        
+        return None, None     
+          
 # ==========================================
 # 4. DATABASE QUERY FUNCTIES
 # ==========================================
+def sla_gebruiker_op(user_id, membership_tier="free", activation_code=None):
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute("""
+        INSERT OR REPLACE INTO users (user_id, membership_tier, activation_code, last_payment_at)
+        VALUES (?, ?, ?, CURRENT_TIMESTAMP)
+    """, (user_id, membership_tier, activation_code))
+    conn.commit()
+    conn.close()
+
+def haal_gebruiker_op(user_id):
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute("SELECT membership_tier, activation_code FROM users WHERE user_id = ?", (user_id,))
+    result = c.fetchone()
+    conn.close()
+    return result
+
+def genereer_activation_code(tier="premium"):
+    import random
+    import string
+    prefix = "PREM" if tier == "premium" else "GOLD"
+    code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+    return f"{prefix}-{code}"
+
+def valideer_activation_code(activation_code):
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute("SELECT user_id, membership_tier FROM users WHERE activation_code = ?", (activation_code,))
+    result = c.fetchone()
+    conn.close()
+    return result
+
 def haal_filosofen_voor_app():
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
@@ -744,20 +787,23 @@ with st.sidebar:
     
     if st.button("⭐ Premium (€5)", use_container_width=True, key="btn_mollie_premium"):
         with st.spinner("Betaling voorbereiden..."):
-            checkout_url = maak_mollie_betaling("premium")
-            if checkout_url:
+            checkout_url, activation_code = maak_mollie_betaling("premium")
+            if checkout_url and activation_code:
+                st.session_state.pending_activation_code = activation_code
                 st.markdown(f"[💳 Klik hier om te betalen]({checkout_url})")
+                st.info(f"Na betaling, gebruik code: **{activation_code}**")
             else:
                 st.error("Kon betaling niet aanmaken")
     
     if st.button("👑 Gold (€15)", use_container_width=True, key="btn_mollie_gold"):
         with st.spinner("Betaling voorbereiden..."):
-            checkout_url = maak_mollie_betaling("gold")
-            if checkout_url:
+            checkout_url, activation_code = maak_mollie_betaling("gold")
+            if checkout_url and activation_code:
+                st.session_state.pending_activation_code = activation_code
                 st.markdown(f"[💳 Klik hier om te betalen]({checkout_url})")
+                st.info(f"Na betaling, gebruik code: **{activation_code}**")
             else:
-                st.error("Kon betaling niet aanmaken")    
-    st.markdown("---")
+                st.error("Kon betaling niet aanmaken")
     
     if st.session_state.membership_tier in ["premium", "gold"]:
         st.markdown("### " + t["sidebar_favorite_thinker"])
@@ -1228,8 +1274,23 @@ with st.expander(t["faq_title"]):
 # 9. MOLLIE BETALING CONTROLE
 # ==========================================
 if "payment" in st.query_params and st.query_params["payment"] == "success":
-    st.success("✅ Betaling ontvangen! Je lidmaatschap wordt bijgewerkt...")
-    st.session_state.membership_tier = "premium"
-    st.balloons()
-    del st.query_params["payment"]
-    st.rerun()    
+    activation_code = st.query_params.get("code", "")
+    
+    if activation_code:
+        result = valideer_activation_code(activation_code)
+        if result:
+            user_id, membership_tier = result
+            sla_gebruiker_op(user_id, membership_tier, activation_code)
+            st.session_state.membership_tier = membership_tier
+            st.success(f"✅ Betaling ontvangen! Je {membership_tier} lidmaatschap is geactiveerd!")
+            st.balloons()
+            del st.query_params["payment"]
+            del st.query_params["code"]
+            st.rerun()
+        else:
+            st.error("Ongeldige activation code")
+            del st.query_params["payment"]
+            del st.query_params["code"]
+    else:
+        st.error("Geen activation code gevonden")
+        del st.query_params["payment"]   
