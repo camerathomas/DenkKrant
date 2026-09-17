@@ -382,7 +382,7 @@ def maak_mollie_betaling(tier="premium"):
         })
         return payment.get_checkout_url()
     except Exception as e:
-        print(f"Mollie betaling fout: {e}")
+        st.error(f"Mollie betaling fout: {e}")
         return None        
 # ==========================================
 # 4. DATABASE QUERY FUNCTIES
