@@ -380,7 +380,7 @@ def maak_mollie_betaling(tier="premium"):
             'webhookUrl': 'https://denkkrant.streamlit.app/?webhook=mollie',
             'metadata': {'tier': tier, 'user_id': st.session_state.user_id}
         })
-        return payment._links.checkout_href()
+        return payment['links']['checkout']['href']
     except Exception as e:
         st.error(f"Mollie betaling fout: {e}")
         return None        
