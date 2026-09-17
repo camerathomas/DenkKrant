@@ -379,7 +379,36 @@ def maak_mollie_betaling(tier="premium"):
     
     bedrag = bedragen.get(tier, "5.00")
     activation_code = genereer_activation_code(tier)
+def maak_mollie_betaling(tier="premium"):
+    client = get_mollie_client()
+    if not client:
+        return None, None
     
+    bedragen = {
+        "premium": "5.00",
+        "gold": "15.00"
+    }
+    
+    bedrag = bedragen.get(tier, "5.00")
+    activation_code = genereer_activation_code(tier)
+    
+    # Code opslaan in database VOOR we naar Mollie gaan
+    sla_gebruiker_op(st.session_state.user_id, tier, activation_code)
+    
+    try:
+        payment = client.payments.create({
+            'amount': {'currency': 'EUR', 'value': bedrag},
+            'description': f'DenkKrant {tier.capitalize()} upgrade',
+            'redirectUrl': f'https://denkkrant-nl.streamlit.app/?payment=success&code={activation_code}',
+            'webhookUrl': 'https://denkkrant-nl.streamlit.app/?webhook=mollie',
+            'metadata': {'tier': tier, 'user_id': st.session_state.user_id, 'activation_code': activation_code}
+        })
+        checkout_url = payment['_links']['checkout']['href']
+        return checkout_url, activation_code
+    except Exception as e:
+        st.error(f"Mollie betaling fout: {e}")
+        return None, None 
+
     try:
         payment = client.payments.create({
             'amount': {'currency': 'EUR', 'value': bedrag},
