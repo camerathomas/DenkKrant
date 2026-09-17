@@ -737,7 +737,7 @@ with st.sidebar:
                 st.success(t["premium_welcome"])
                 st.rerun()
         else:
-            st.error(t["ongeldige code"])                    
+            st.error("ongeldige code")                    
     st.markdown("---")
     st.markdown("### 💳 Upgrade met Mollie")
     st.caption("Testmodus: geen echt geld")
