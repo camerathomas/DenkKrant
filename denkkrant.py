@@ -15,6 +15,7 @@ import io
 import time
 import json
 from dotenv import load_dotenv
+from mollie.api.client import Client
 
 # ==========================================
 # 1. HELPER FUNCTIES
@@ -345,7 +346,44 @@ else:
     st.session_state.eigen_ollama_url = 'http://localhost:11434'
     st.session_state.eigen_model = ''
     st.session_state.eigen_api_key = ''
+# Mollie client initialiseren
+def get_mollie_client():
+    try:
+        load_dotenv()
+        mollie_key = os.getenv("MOLLIE_API_KEY")
+        if not mollie_key:
+            return None
+        client = Client()
+        client.set_api_key(mollie_key)
+        return client
+    except Exception as e:
+        print(f"Mollie initialisatie fout: {e}")
+        return None
 
+def maak_mollie_betaling(tier="premium"):
+    client = get_mollie_client()
+    if not client:
+        return None
+    
+    bedragen = {
+        "premium": "5.00",
+        "gold": "15.00"
+    }
+    
+    bedrag = bedragen.get(tier, "5.00")
+    
+    try:
+        payment = client.payments.create({
+            'amount': {'currency': 'EUR', 'value': bedrag},
+            'description': f'DenkKrant {tier.capitalize()} upgrade',
+            'redirectUrl': 'https://denkkrant.streamlit.app/?payment=success',
+            'webhookUrl': 'https://denkkrant.streamlit.app/?webhook=mollie',
+            'metadata': {'tier': tier, 'user_id': st.session_state.user_id}
+        })
+        return payment.get_checkout_url()
+    except Exception as e:
+        print(f"Mollie betaling fout: {e}")
+        return None        
 # ==========================================
 # 4. DATABASE QUERY FUNCTIES
 # ==========================================
@@ -698,9 +736,27 @@ with st.sidebar:
                 st.session_state.membership_tier = "premium"
                 st.success(t["premium_welcome"])
                 st.rerun()
-            else:
-                st.error(t["ongeldige code"])
+        else:
+            st.error(t["ongeldige code"])                    
+    st.markdown("---")
+    st.markdown("### 💳 Upgrade met Mollie")
+    st.caption("Testmodus: geen echt geld")
     
+    if st.button("⭐ Premium (€5)", use_container_width=True, key="btn_mollie_premium"):
+        with st.spinner("Betaling voorbereiden..."):
+            checkout_url = maak_mollie_betaling("premium")
+            if checkout_url:
+                st.markdown(f"[💳 Klik hier om te betalen]({checkout_url})")
+            else:
+                st.error("Kon betaling niet aanmaken")
+    
+    if st.button("👑 Gold (€15)", use_container_width=True, key="btn_mollie_gold"):
+        with st.spinner("Betaling voorbereiden..."):
+            checkout_url = maak_mollie_betaling("gold")
+            if checkout_url:
+                st.markdown(f"[💳 Klik hier om te betalen]({checkout_url})")
+            else:
+                st.error("Kon betaling niet aanmaken")    
     st.markdown("---")
     
     if st.session_state.membership_tier in ["premium", "gold"]:
@@ -1167,3 +1223,13 @@ elif menu == t["sidebar_philosophers"]:
 st.markdown("---")
 with st.expander(t["faq_title"]):
     st.markdown(t["faq_content"])
+
+# ==========================================
+# 9. MOLLIE BETALING CONTROLE
+# ==========================================
+if "payment" in st.query_params and st.query_params["payment"] == "success":
+    st.success("✅ Betaling ontvangen! Je lidmaatschap wordt bijgewerkt...")
+    st.session_state.membership_tier = "premium"
+    st.balloons()
+    del st.query_params["payment"]
+    st.rerun()    
