@@ -399,8 +399,8 @@ def maak_mollie_betaling(tier="premium"):
         payment = client.payments.create({
             'amount': {'currency': 'EUR', 'value': bedrag},
             'description': f'DenkKrant {tier.capitalize()} upgrade',
-            'redirectUrl': f'https://denkkrant-nl.streamlit.app/?payment=success&code={activation_code}',
-            'webhookUrl': 'https://denkkrant-nl.streamlit.app/?webhook=mollie',
+            'redirectUrl': f'https://denkkrant.streamlit.app/?payment=success&code={activation_code}',
+            'webhookUrl': 'https://denkkrant.streamlit.app/?webhook=mollie',
             'metadata': {'tier': tier, 'user_id': st.session_state.user_id, 'activation_code': activation_code}
         })
         checkout_url = payment['_links']['checkout']['href']
