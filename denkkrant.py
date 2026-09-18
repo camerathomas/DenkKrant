@@ -288,7 +288,7 @@ def init_database():
         tier TEXT NOT NULL DEFAULT 'free'
     )''')
     for naam, data in FILOSOFEN_MASTER.items():
-        c.execute("INSERT OR IGNORE INTO filosofen_status (naam, actief, tier) VALUES (?, ?, ?)", 
+        c.execute("INSERT OR REPLACE INTO filosofen_status (naam, actief, tier) VALUES (?, ?, ?)", 
                   (naam, data.get("actief", 1), data.get("tier", "free")))
     c.execute('''CREATE TABLE IF NOT EXISTS usage_log (
         id INTEGER PRIMARY KEY AUTOINCREMENT, user_id TEXT NOT NULL, usage_date TEXT NOT NULL,
