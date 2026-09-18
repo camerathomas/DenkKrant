@@ -834,7 +834,7 @@ with st.sidebar:
             fav_choice = st.selectbox(t["sidebar_choose_favorite"], list(ALLE_FILOSOFEN.keys()), key="fav_select")
             if st.button(t["sidebar_set_favorite"], key="btn_set_fav"):
                 st.session_state.favoriet = fav_choice
-                st.success(f"{fav_choice} {t['favorite_set']}")
+                st.success(f"{fav_choice} ⭐❤️")
                 st.rerun()
 
     st.markdown("---")
