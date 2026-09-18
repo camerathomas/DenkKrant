@@ -826,7 +826,7 @@ with st.sidebar:
         st.markdown("### " + t["sidebar_favorite_thinker"])
         if st.session_state.favoriet:
             fav_vertaald = get_vertaalde_naam(st.session_state.favoriet, st.session_state.taal)
-            st.success(f"{t['sidebar_your_favorite']} **{fav_vertaald}**")
+            st.success(f"{t['sidebar_your_favorite']} ❤️ **{fav_vertaald}**")
             if st.button(t["sidebar_remove_favorite"], key="btn_remove_fav"):
                 st.session_state.favoriet = None
                 st.rerun()
@@ -834,7 +834,7 @@ with st.sidebar:
             fav_choice = st.selectbox(t["sidebar_choose_favorite"], list(ALLE_FILOSOFEN.keys()), key="fav_select")
             if st.button(t["sidebar_set_favorite"], key="btn_set_fav"):
                 st.session_state.favoriet = fav_choice
-                st.success(f"{fav_choice} ⭐❤️")
+                st.success(f"{fav_choice} ❤️")
                 st.rerun()
 
     st.markdown("---")
