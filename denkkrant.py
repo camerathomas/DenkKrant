@@ -738,7 +738,14 @@ def _genereer_gemini(prompt):
 # 6. DE APP UI
 # ==========================================
 st.set_page_config(page_title="DenkKrant", page_icon="📰", layout="wide")
-st.markdown('<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">', unsafe_allow_html=True)
+# 🔍 TEKST IETS GROTER
+st.markdown("""
+<style>
+body {
+    font-size: 18px !important;
+}
+</style>
+""", unsafe_allow_html=True)
 st.title("📰 DenkKrant")
 st.markdown("*" + t["app_subtitle"] + "*")
 
