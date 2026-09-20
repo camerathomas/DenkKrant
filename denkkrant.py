@@ -742,8 +742,12 @@ st.set_page_config(page_title="DenkKrant", page_icon="📰", layout="wide")
 st.markdown("""
 <style>
 body {
-    font-size: 18px !important;
+    font-size: 20px !important;
 }
+
+section[data-testid="stSidebar"] > div > div:last-child {
+    margin-top: auto !important;
+}    
 </style>
 """, unsafe_allow_html=True)
 st.title("📰 DenkKrant")
