@@ -531,18 +531,31 @@ def maak_hashtags_uit_titel(titel, aantal=2):
 def maak_share_urls(filosoof, titel, gedachte, commentaar=""):
     taal = st.session_state.get('taal', 'nl')
     t_local = laad_vertalingen(taal)
-    vertaalde_titel = "" # Vereenvoudigd voor stabiliteit
-    if vertaalde_titel and not vertaalde_titel.startswith("❌"):
-        base_text = t_local["share_intro"].format(filosoof=filosoof, titel=f"{titel}\n**{vertaalde_titel}**") + f"\n\n{gedachte}"
-    else:
-        base_text = t_local["share_intro"].format(filosoof=filosoof, titel=titel) + f"\n\n{gedachte}"
+    
+    # 1. Basis tekst opbouwen
+    base_text = t_local["share_intro"].format(filosoof=filosoof, titel=titel) + f"\n\n{gedachte}"
+    
+    # 2. Optioneel commentaar toevoegen
     if commentaar:
-        comment_label = t_local.get("share_comment_label", "My thought:" if taal == 'en' else "Mijn gedachte:")
+        comment_label = t_local.get("share_comment_label", "Mijn gedachte:")
         base_text += f"\n\n{comment_label} {commentaar}"
-        titel_hashtags = maak_hashtags_uit_titel(titel, aantal=2)
-        base_text += f"\n\n{t_local['share_made_with']}\n\n{t_local['share_hashtag_thinktank']} {t_local['share_hashtag_philosophy']} {t_local['share_hashtag_news']} {titel_hashtags}"    
+        
+    # 3. Dynamische hashtags uit de titel genereren
+    titel_hashtags = maak_hashtags_uit_titel(titel, aantal=2)
+    
+    # 4. Vaste hashtags ophalen (met veilige fallback als ze leeg zijn in JSON)
+    h1 = t_local.get('share_hashtag_thinktank', '#DenkKrant')
+    h2 = t_local.get('share_hashtag_philosophy', '#filosofie')
+    h3 = t_local.get('share_hashtag_news', '#nieuws')
+    made_with = t_local.get('share_made_with', 'Gemaakt met DenkKrant')
+    
+    # 5. Alles samenvoegen aan de base_text
+    base_text += f"\n\n{made_with}\n\n{h1} {h2} {h3} {titel_hashtags}"
+    
+    # 6. URL encoding voor de social media links
     encoded_text = requests.utils.quote(base_text)
     encoded_url = requests.utils.quote('https://denkkrant.app')
+    
     return {
         "linkedin": f"https://www.linkedin.com/sharing/share-offsite/?url={encoded_url}&summary={encoded_text}",
         "x": f"https://twitter.com/intent/tweet?text={encoded_text}",
