@@ -486,7 +486,7 @@ def can_analyze():
     limit = limits.get(tier, 3)
     current_usage = get_daily_usage(st.session_state.user_id)
     if current_usage >= limit:
-        st.warning(t["error_limit_reached"].format(current_usage=current_usage, limit=limit))        
+        st.warning(t["news_daily_limit"].format(current_usage=current_usage, limit=limit))        
         return False
     return True  
 
