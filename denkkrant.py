@@ -638,44 +638,22 @@ def genereer_gedachte(nieuws_tekst, filosoof_key, filosofen_dict):
     else:
         return _genereer_gemini(prompt)  
 
-def vertaal_nieuws_met_ai(nieuws_tekst, doeltaal):
-    """Vertaalt tekst betrouwbaar via de bestaande Gemini API"""
-    import re
-    import html
-    import os
-    from dotenv import load_dotenv
+def vertaal_nieuws(nieuws_tekst, doeltaal):
+    """Vertaalt tekst via translators bibliotheek (gratis, snel, geen API key)"""
+    import translators as ts
     
-    if not nieuws_tekst or len(nieuws_tekst.strip()) < 10:
-        return nieuws_tekst
-
-    # 1. Simpele cleanup: haal CDATA en HTML-tags weg zodat de AI alleen tekst ziet
-    schone_tekst = re.sub(r'<!\[CDATA\[|\]\]>', '', nieuws_tekst)
-    schone_tekst = re.sub(r'<[^>]+>', ' ', schone_tekst)
-    schone_tekst = html.unescape(schone_tekst)
-    schone_tekst = ' '.join(schone_tekst.split())[:2000] # Max 2000 karakters voor snelheid
-
-    # 2. Duidelijke prompt voor de AI
-    prompt = f"Vertaal de volgende nieuws tekst naar het {doeltaal}. Vertaal alleen de tekst, behoud de feitelijke betekenis, en voeg geen eigen commentaar of uitleg toe:\n\n{schone_tekst}"
-
     try:
-        load_dotenv()
-        api_key = os.getenv("GEMINI_API_KEY")
-        if not api_key:
-            return "❌ Geen API key gevonden"
-            
-        from google import genai
-        client = genai.Client(api_key=api_key)
-        
-        # Gebruik een snel en goedkoop model voor vertaling
-        response = client.models.generate_content(
-            model="gemini-2.0-flash", # Of "gemini-1.5-flash" als 2.0 niet werkt
-            contents=prompt
+        # Vertaal via Google Translate (razendsnel en gratis)
+        vertaling = ts.translate_text(
+            nieuws_tekst, 
+            translator='google',
+            from_language='auto',  # Automatische brondetectie
+            to_language=doeltaal
         )
-        return response.text.strip()
-        
+        return vertaling
     except Exception as e:
-        print(f"⚠️ AI Vertaling mislukt: {e}")
-        return f"❌ Vertaling mislukt: {str(e)}"           
+        print(f"⚠️ Vertaling mislukt: {e}")
+        return f"❌ Vertaling mislukt: {e}"           
 
 def bouw_debat_prompt(nieuws_tekst, filosoof_key, filosofen_dict, laatste_reactie_van_andere_filosoof, naam_andere_filosoof):
     filosoof_data = filosofen_dict[filosoof_key]
@@ -1085,9 +1063,9 @@ elif menu == t["sidebar_news"]:
         nieuwsbronnen = {
             "NOS": "https://feeds.nos.nl/nosnieuwsalgemeen", "Tweakers": "https://tweakers.net/feeds/mixed.xml", "AT5": "https://rss.at5.nl/rss",
             "Guardian": "https://www.theguardian.com/international/rss", "El País": "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada",
-            "Google News FR": "https://news.google.com/rss?hl=fr&gl=FR&ceid=FR:fr", "Stern": "https://www.stern.de/feed/standard/alle-nachrichten/",
-            "Campo Grande": "https://www.campograndenews.com.br/rss/rss.xml", "BBC Hindi": "https://feeds.bbci.co.uk/hindi/rss.xml",
-            "China News": "https://www.chinanews.com.cn/rss/importnews.xml", "Al Jazeera": "https://www.aljazeera.net/aljazeerarss/a7c186be-1baa-4bd4-9d80-a84db769f779/73d0e1b4-532f-45ef-b135-bfdff8b8cab9?utm_source=chatgpt.com", "Alternet": "https://www.alternet.org/feeds/world.rss",
+            "Google News FR": "https://news.google.com/rss?hl=fr&gl=FR&ceid=FR:fr", "Der Spiegel": "https://www.spiegel.de/schlagzeilen/index.rss",
+            "Folha": "https://feeds.folha.uol.com.br/emcimadahora/rss091.xml", "BBC Hindi": "https://feeds.bbci.co.uk/hindi/rss.xml",
+            "China News": "https://www.chinanews.com.cn/rss/importnews.xml", "Al Jazeera": "https://www.aljazeera.net/aljazeerarss/a7c186be-1baa-4bd4-9d80-a84db769f779/73d0e1b4-532f-45ef-b135-bfdff8b8cab9?utm_source=chatgpt.com", "NPR": "https://feeds.npr.org/1004/rss.xml",
         }
         cols = [st.columns(2) for _ in range(6)]
         bronnen_lijst = list(nieuwsbronnen.items())
