@@ -1073,7 +1073,7 @@ elif menu == t["sidebar_news"]:
             col_a, col_b = cols[idx // 2]
             target_col = col_a if idx % 2 == 0 else col_b
             with target_col:
-                if st.button(f"{'🇳🇱 ' if naam=='NOS' else '💻 ' if naam=='Tweakers' else '🏙️ ' if naam=='AT5' else '🇪🇸 ' if naam=='El País' else '🇫🇷 ' if naam=='Google News FR' else '🇩🇪 ' if naam=='Der Spiegel' else '🇵🇹 ' if naam=='Folha' else '🇮🇳 ' if naam=='BBC Hindi' else '🇨🇳 ' if naam=='China News' else '🇸🇦 ' if naam=='BBC Arabic' else '🇺🇸 ' if naam=='NPR' else ''}{naam}", use_container_width=True, key=f"btn_{naam.replace(' ', '_').lower()}"):
+                if st.button(f"{'🇳🇱 ' if naam=='NOS' else '💻 ' if naam=='Tweakers' else '🏙️ ' if naam=='AT5' else '🇪🇸 ' if naam=='El País' else '🇫🇷 ' if naam=='Google News FR' else '🇩🇪 ' if naam=='Stern' else '🇵🇹 ' if naam=='Campo Grande' else '🇮🇳 ' if naam=='BBC Hindi' else '🇨🇳 ' if naam=='China News' else '🇸🇦 ' if naam=='BBC Arabic' else '🇺🇸 ' if naam=='Alternet' else ''}{naam}", use_container_width=True, key=f"btn_{naam.replace(' ', '_').lower()}"):
                     st.session_state.gewenste_bron = naam
                     st.session_state.gewenste_url = url
                     if 'vertaalde_nieuws_items' in st.session_state:
