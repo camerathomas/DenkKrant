@@ -638,44 +638,43 @@ def genereer_gedachte(nieuws_tekst, filosoof_key, filosofen_dict):
     else:
         return _genereer_gemini(prompt)  
 
-def vertaal_nieuws(nieuws_tekst, doeltaal):
-    """Vertaalt tekst via translators bibliotheek (gratis, snel, geen API key)"""
-    import translators as ts
+def vertaal_nieuws_met_ai(nieuws_tekst, doeltaal):
+    """Vertaalt tekst betrouwbaar via de bestaande Gemini API"""
     import re
     import html
+    import os
+    from dotenv import load_dotenv
     
+    if not nieuws_tekst or len(nieuws_tekst.strip()) < 10:
+        return nieuws_tekst
+
+    # 1. Simpele cleanup: haal CDATA en HTML-tags weg zodat de AI alleen tekst ziet
+    schone_tekst = re.sub(r'<!\[CDATA\[|\]\]>', '', nieuws_tekst)
+    schone_tekst = re.sub(r'<[^>]+>', ' ', schone_tekst)
+    schone_tekst = html.unescape(schone_tekst)
+    schone_tekst = ' '.join(schone_tekst.split())[:2000] # Max 2000 karakters voor snelheid
+
+    # 2. Duidelijke prompt voor de AI
+    prompt = f"Vertaal de volgende nieuws tekst naar het {doeltaal}. Vertaal alleen de tekst, behoud de feitelijke betekenis, en voeg geen eigen commentaar of uitleg toe:\n\n{schone_tekst}"
+
     try:
-        if not nieuws_tekst or not nieuws_tekst.strip():
-            return ""
+        load_dotenv()
+        api_key = os.getenv("GEMINI_API_KEY")
+        if not api_key:
+            return "❌ Geen API key gevonden"
+            
+        from google import genai
+        client = genai.Client(api_key=api_key)
         
-        # STAP 1: Verwijder CDATA wrappers (de boosdoener bij Stern/Feedspot)
-        schone_tekst = re.sub(r'<!\[CDATA\[', '', nieuws_tekst)
-        schone_tekst = re.sub(r'\]\]>', '', schone_tekst)
-        
-        # STAP 2: Decode HTML entities (maakt van &amp; weer een &)
-        schone_tekst = html.unescape(schone_tekst)
-        
-        # STAP 3: Verwijder ALLE HTML-tags (<div>, <p>, <a>, etc.)
-        schone_tekst = re.sub(r'<[^>]+>', ' ', schone_tekst)
-        
-        # STAP 4: Verwijder dubbele spaties en vreemde witruimte
-        schone_tekst = ' '.join(schone_tekst.split())
-        
-        # STAP 5: HARDE LIMIEL. De gratis API crasht op lange teksten. 
-        # 2500 karakters is meer dan genoeg voor een goede vertaling van de kern.
-        schone_tekst = schone_tekst[:2500]
-        
-        # STAP 6: Vertaal de nu volledig schone, korte tekst
-        vertaling = ts.translate_text(
-            schone_tekst, 
-            translator='google',
-            from_language='auto',
-            to_language=doeltaal
+        # Gebruik een snel en goedkoop model voor vertaling
+        response = client.models.generate_content(
+            model="gemini-2.0-flash", # Of "gemini-1.5-flash" als 2.0 niet werkt
+            contents=prompt
         )
-        return vertaling
+        return response.text.strip()
         
     except Exception as e:
-        print(f"⚠️ Vertaling mislukt: {e}")
+        print(f"⚠️ AI Vertaling mislukt: {e}")
         return f"❌ Vertaling mislukt: {str(e)}"           
 
 def bouw_debat_prompt(nieuws_tekst, filosoof_key, filosofen_dict, laatste_reactie_van_andere_filosoof, naam_andere_filosoof):
