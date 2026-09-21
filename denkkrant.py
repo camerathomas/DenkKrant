@@ -643,6 +643,8 @@ def vertaal_nieuws(nieuws_tekst, doeltaal):
     import translators as ts
     
     try:
+        # Verwijder HTML-tags die Feedspot toevoegt (voorkomt crashes)
+        nieuws_tekst = re.sub(r'<[^>]+>', ' ', nieuws_tekst)        
         # Vertaal via Google Translate (razendsnel en gratis)
         vertaling = ts.translate_text(
             nieuws_tekst, 
