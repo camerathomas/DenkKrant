@@ -641,35 +641,19 @@ def genereer_gedachte(nieuws_tekst, filosoof_key, filosofen_dict):
 def vertaal_nieuws(nieuws_tekst, doeltaal):
     """Vertaalt tekst via translators bibliotheek (gratis, snel, geen API key)"""
     import translators as ts
-    import re
     
     try:
-        if not nieuws_tekst or not nieuws_tekst.strip():
-            return ""
-        
-        # 🛠️ FIX VOOR FEEDSPOT: Haal eventuele HTML-tags weg die Feedspot toevoegt
-        # Dit voorkomt dat de vertaler vastloopt op verborgen code of 'Lees verder' links
-        schone_tekst = re.sub(r'<[^>]+>', ' ', nieuws_tekst)
-        schone_tekst = html.unescape(schone_tekst)
-        schone_tekst = ' '.join(schone_tekst.split()) # Verwijder dubbele spaties
-        
-        # 🛠️ FIX VOOR LENGTE: Feedspot teksten kunnen enorm lang zijn. 
-        # We knippen veilig af op 3000 karakters om crashes van de library te voorkomen.
-        schone_tekst = schone_tekst[:3000]
-        
+        # Vertaal via Google Translate (razendsnel en gratis)
         vertaling = ts.translate_text(
-            schone_tekst, 
+            nieuws_tekst, 
             translator='google',
-            from_language='auto',
+            from_language='auto',  # Automatische brondetectie
             to_language=doeltaal
         )
         return vertaling
-        
     except Exception as e:
-        # Dit print de exacte fout naar je terminal, zodat we niet meer hoeven te raden
-        print(f"⚠️ Vertaling mislukt. Fout: {e}")
-        print(f"Tekst fragment: {nieuws_tekst[:100]}...")
-        return f"❌ Vertaling mislukt: {str(e)}"           
+        print(f"⚠️ Vertaling mislukt: {e}")
+        return f"❌ Vertaling mislukt: {e}"            
 
 def bouw_debat_prompt(nieuws_tekst, filosoof_key, filosofen_dict, laatste_reactie_van_andere_filosoof, naam_andere_filosoof):
     filosoof_data = filosofen_dict[filosoof_key]
