@@ -505,6 +505,29 @@ def verwerk_neologismen(tekst, filosoof_naam):
         noten.append(f"{superscript} **{woord}**: {definitie}")
     return schone_tekst, noten
 
+def maak_hashtags_uit_titel(titel, aantal=2):
+    """Haalt de 2 meest relevante woorden uit een titel en maakt er hashtags van"""
+    import re
+    
+    # Stopwoorden die we niet willen als hashtag
+    stopwoorden = {'de', 'het', 'een', 'van', 'en', 'in', 'op', 'met', 'voor', 'aan', 
+                   'the', 'a', 'an', 'of', 'and', 'in', 'on', 'for', 'with', 'to',
+                   'le', 'la', 'les', 'de', 'el', 'los', 'der', 'die', 'das', 'und'}
+    
+    # Verwijder speciale tekens en splits op spaties
+    woorden = re.sub(r'[^\w\s]', '', titel).split()
+    
+    # Filter: alleen woorden langer dan 3 tekens, geen stopwoorden
+    relevante_woorden = [w.lower() for w in woorden 
+                        if len(w) > 3 and w.lower() not in stopwoorden]
+    
+    # Pak de eerste 2 unieke woorden
+    hashtags = []
+    for woord in relevante_woorden[:aantal]:
+        hashtags.append(f"#{woord}")
+    
+    return " ".join(hashtags)
+    
 def maak_share_urls(filosoof, titel, gedachte, commentaar=""):
     taal = st.session_state.get('taal', 'nl')
     t_local = laad_vertalingen(taal)
@@ -516,7 +539,8 @@ def maak_share_urls(filosoof, titel, gedachte, commentaar=""):
     if commentaar:
         comment_label = t_local.get("share_comment_label", "My thought:" if taal == 'en' else "Mijn gedachte:")
         base_text += f"\n\n{comment_label} {commentaar}"
-    base_text += f"\n\n{t_local['share_made_with']}\n\n{t_local['share_hashtag_thinktank']} {t_local['share_hashtag_philosophy']} {t_local['share_hashtag_news']}"
+        titel_hashtags = maak_hashtags_uit_titel(titel, aantal=2)
+        base_text += f"\n\n{t_local['share_made_with']}\n\n{t_local['share_hashtag_thinktank']} {t_local['share_hashtag_philosophy']} {t_local['share_hashtag_news']} {titel_hashtags}"    
     encoded_text = requests.utils.quote(base_text)
     encoded_url = requests.utils.quote('https://denkkrant.app')
     return {
