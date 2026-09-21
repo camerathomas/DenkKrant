@@ -482,13 +482,21 @@ def log_analysis(user_id):
 
 def can_analyze():
     tier = st.session_state.membership_tier
-    limits = {"free": 3, "premium": 15, "gold": 99999} 
+    
+    current_id = st.session_state.get('device_id', 'unknown') if tier == "free" else st.session_state.user_id
+    current_usage = get_daily_usage(current_id)
+    
+    limits = {"free": 3, "premium": 15, "gold": 100} 
     limit = limits.get(tier, 3)
-    current_usage = get_daily_usage(st.session_state.user_id)
+    
     if current_usage >= limit:
-        st.warning(t["error_limit_reached"].format(current_usage=current_usage, limit=limit))        
+        if tier == "gold":
+            st.warning("📚📱🛑 **Scroll Addiction Warning** 🧘‍♂️📖💤", icon="⚠️")
+        else:
+            st.warning(t["error_limit_reached"].format(current_usage=current_usage, limit=limit))
         return False
-    return True  
+    
+    return True   
 
 def verwerk_neologismen(tekst, filosoof_naam):
     if not tekst or tekst is None:
@@ -736,6 +744,28 @@ section[data-testid="stSidebar"] > div > div:last-child {
 }    
 </style>
 """, unsafe_allow_html=True)
+# 🆔 DEVICE ID (voor free gebruikers, reset na 24 uur)
+import streamlit.components.v1 as components
+
+device_id_html = """
+<script>
+    if (!localStorage.getItem('denkkrant_device_id')) {
+        localStorage.setItem('denkkrant_device_id', 'device_' + Math.random().toString(36).substr(2, 9));
+        localStorage.setItem('denkkrant_first_visit', Date.now());
+    }
+    const firstVisit = parseInt(localStorage.getItem('denkkrant_first_visit'));
+    if (Date.now() - firstVisit > 86400000) {
+        localStorage.setItem('denkkrant_device_id', 'device_' + Math.random().toString(36).substr(2, 9));
+        localStorage.setItem('denkkrant_first_visit', Date.now());
+    }
+    document.body.setAttribute('data-device-id', localStorage.getItem('denkkrant_device_id'));
+</script>
+"""
+components.html(device_id_html, height=0)
+
+if 'device_id' not in st.session_state:
+    import uuid
+    st.session_state.device_id = str(uuid.uuid4())[:8]
 st.title("📰 DenkKrant")
 st.markdown("*" + t["app_subtitle"] + "*")
 
