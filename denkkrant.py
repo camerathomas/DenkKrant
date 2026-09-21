@@ -1063,8 +1063,8 @@ elif menu == t["sidebar_news"]:
         nieuwsbronnen = {
             "NOS": "https://feeds.nos.nl/nosnieuwsalgemeen", "Tweakers": "https://tweakers.net/feeds/mixed.xml", "AT5": "https://rss.at5.nl/rss",
             "Guardian": "https://www.theguardian.com/international/rss", "El País": "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada",
-            "Google News FR": "https://news.google.com/rss?hl=fr&gl=FR&ceid=FR:fr", "Der Spiegel": "https://www.spiegel.de/schlagzeilen/index.rss",
-            "Folha": "https://feeds.folha.uol.com.br/emcimadahora/rss091.xml", "BBC Hindi": "https://feeds.bbci.co.uk/hindi/rss.xml",
+            "Google News FR": "https://news.google.com/rss?hl=fr&gl=FR&ceid=FR:fr", "Stern": "https://www.stern.de/feed/standard/alle-nachrichten/",
+            "Campo Grande": "https://www.campograndenews.com.br/rss/rss.xml", "BBC Hindi": "https://feeds.bbci.co.uk/hindi/rss.xml",
             "China News": "https://www.chinanews.com.cn/rss/importnews.xml", "Al Jazeera": "https://www.aljazeera.net/aljazeerarss/a7c186be-1baa-4bd4-9d80-a84db769f779/73d0e1b4-532f-45ef-b135-bfdff8b8cab9?utm_source=chatgpt.com", "Alternet": "https://www.alternet.org/feeds/world.rss",
         }
         cols = [st.columns(2) for _ in range(6)]
