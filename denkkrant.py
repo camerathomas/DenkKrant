@@ -641,21 +641,42 @@ def genereer_gedachte(nieuws_tekst, filosoof_key, filosofen_dict):
 def vertaal_nieuws(nieuws_tekst, doeltaal):
     """Vertaalt tekst via translators bibliotheek (gratis, snel, geen API key)"""
     import translators as ts
+    import re
+    import html
     
     try:
-        # Verwijder HTML-tags die Feedspot toevoegt (voorkomt crashes)
-        nieuws_tekst = re.sub(r'<[^>]+>', ' ', nieuws_tekst)        
-        # Vertaal via Google Translate (razendsnel en gratis)
+        if not nieuws_tekst or not nieuws_tekst.strip():
+            return ""
+        
+        # STAP 1: Verwijder CDATA wrappers (de boosdoener bij Stern/Feedspot)
+        schone_tekst = re.sub(r'<!\[CDATA\[', '', nieuws_tekst)
+        schone_tekst = re.sub(r'\]\]>', '', schone_tekst)
+        
+        # STAP 2: Decode HTML entities (maakt van &amp; weer een &)
+        schone_tekst = html.unescape(schone_tekst)
+        
+        # STAP 3: Verwijder ALLE HTML-tags (<div>, <p>, <a>, etc.)
+        schone_tekst = re.sub(r'<[^>]+>', ' ', schone_tekst)
+        
+        # STAP 4: Verwijder dubbele spaties en vreemde witruimte
+        schone_tekst = ' '.join(schone_tekst.split())
+        
+        # STAP 5: HARDE LIMIEL. De gratis API crasht op lange teksten. 
+        # 2500 karakters is meer dan genoeg voor een goede vertaling van de kern.
+        schone_tekst = schone_tekst[:2500]
+        
+        # STAP 6: Vertaal de nu volledig schone, korte tekst
         vertaling = ts.translate_text(
-            nieuws_tekst, 
+            schone_tekst, 
             translator='google',
-            from_language='auto',  # Automatische brondetectie
+            from_language='auto',
             to_language=doeltaal
         )
         return vertaling
+        
     except Exception as e:
         print(f"⚠️ Vertaling mislukt: {e}")
-        return f"❌ Vertaling mislukt: {e}"            
+        return f"❌ Vertaling mislukt: {str(e)}"           
 
 def bouw_debat_prompt(nieuws_tekst, filosoof_key, filosofen_dict, laatste_reactie_van_andere_filosoof, naam_andere_filosoof):
     filosoof_data = filosofen_dict[filosoof_key]
