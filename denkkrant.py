@@ -578,21 +578,12 @@ def maak_share_image(titel, filosoof_naam, filosoof_emoji, gedachte, commentaar,
     draw.rectangle([0, 0, width-1, height-1], outline=border_color, width=12)
     draw.rectangle([15, 15, width-16, height-16], outline=border_color, width=2)
     try:
-        # Laptop (Windows)
         text_font = ImageFont.truetype("arial.ttf", 32)
         footer_font = ImageFont.truetype("arial.ttf", 22)
         emoji_font_logo = ImageFont.truetype("C:/Windows/Fonts/seguiemj.ttf", 44)
         emoji_font_phil = ImageFont.truetype("C:/Windows/Fonts/seguiemj.ttf", 56)
     except:
-        try:
-            # Server/Telefoon (Linux) - Exact dezelfde groottes!
-            text_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 32)
-            footer_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 22)
-            emoji_font_logo = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 44)
-            emoji_font_phil = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 56)
-        except:
-            # Allerlaatste redmiddel
-            text_font = footer_font = emoji_font_logo = emoji_font_phil = ImageFont.load_default()
+        text_font = footer_font = emoji_font_logo = emoji_font_phil = ImageFont.load_default()
 
     def draw_centered_text(y_pos, text, font, fill_color):
         bbox = draw.textbbox((0, 0), text, font=font)
