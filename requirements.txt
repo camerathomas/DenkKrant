@@ -6,3 +6,5 @@ edge-tts
 translators
 google-genai
 mollie-api-python
+beautifulsoup4
+google-generativeai
