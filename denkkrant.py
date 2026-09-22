@@ -619,40 +619,18 @@ def draw_centered_text(y_pos, text, font, fill_color, embedded=False):
               embedded_color=embedded)
     return y_pos + (bbox[3] - bbox[1]) + 10
 
-    # === TEKENEN ===
     y = 40
+    y = draw_centered_text(y, "🧠  🤔 DenkKrant", emoji_font_logo, '#ffffff')
 
-    # 1) Logo: emoji's in emoji-font, "DenkKrant" in gewoon font
-    bbox_e = draw.textbbox((0, 0), "🧠  🤔 ", font=emoji_font_logo)
-    bbox_t = draw.textbbox((0, 0), "DenkKrant", font=text_font)
-    totaal = (bbox_e[2] - bbox_e[0]) + (bbox_t[2] - bbox_t[0])
-    x_start = (width - totaal) // 2
-    draw.text((x_start, y), "🧠  🤔 ", font=emoji_font_logo,
-              embedded_color=True)
-    draw.text((x_start + (bbox_e[2] - bbox_e[0]), y), "DenkKrant",
-              font=text_font, fill='#ffffff')
-    y += max(bbox_e[3] - bbox_e[1], bbox_t[3] - bbox_t[1]) + 10
-
-    # 2) Titel (grijs, klein)
     if titel:
         y += 10
-        korte_titel = titel[:60] + ('...' if len(titel) > 60 else '')
-        y = draw_centered_text(y, f"Over: {korte_titel}",
-                               footer_font, '#94a3b8')
+        y = draw_centered_text(y, t["share_image_over"].format(titel=titel[:60] + ('...' if len(titel)>60 else '')), footer_font, '#94a3b8')
 
-    # 3) Filosoof: emoji + naam, gescheiden
     y += 20
-    bbox_e = draw.textbbox((0, 0), filosoof_emoji + " ", font=emoji_font_phil)
-    bbox_t = draw.textbbox((0, 0), filosoof_naam, font=text_font)
-    totaal = (bbox_e[2] - bbox_e[0]) + (bbox_t[2] - bbox_t[0])
-    x_start = (width - totaal) // 2
-    draw.text((x_start, y), filosoof_emoji + " ", font=emoji_font_phil,
-              fill='#FFD700', embedded_color=True)
-    draw.text((x_start + (bbox_e[2] - bbox_e[0]), y), filosoof_naam,
-              font=text_font, fill='#FFD700')
-    y += max(bbox_e[3] - bbox_e[1], bbox_t[3] - bbox_t[1]) + 20
+    y = draw_centered_text(y, f"{filosoof_emoji} {filosoof_naam}", emoji_font_phil, '#FFD700')
+    y += 20
 
-    # 4) Gedachte-tekst: wrappen en tekenen
+    # Tekst wrappen
     words = gedachte.split()
     lines, current_line = [], []
     max_width = width - 160
@@ -662,21 +640,19 @@ def draw_centered_text(y_pos, text, font, fill_color, embedded=False):
         if bbox[2] - bbox[0] <= max_width:
             current_line.append(word)
         else:
-            if current_line:
-                lines.append(' '.join(current_line))
+            lines.append(' '.join(current_line))
             current_line = [word]
     if current_line:
         lines.append(' '.join(current_line))
 
-    regel_hoogte = draw.textbbox((0, 0), "Ag", font=text_font)[3] + 10
-    beschikbaar = height - y - 80
-    max_regels = max(1, beschikbaar // regel_hoogte)
-    for line in lines[:max_regels]:
+    for line in lines[:9]:
         y = draw_centered_text(y, line, text_font, '#e2e8f0')
 
-    # 5) Footer
-    draw_centered_text(height - 50, t["share_image_footer"],
-                       footer_font, '#64748b')
+    if commentaar:
+        y += 20
+        y = draw_centered_text(y, commentaar, footer_font, '#94a3b8')
+
+    draw_centered_text(height - 50, t["share_image_footer"], footer_font, '#64748b')
 
     return img
 
