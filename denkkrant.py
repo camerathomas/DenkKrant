@@ -578,10 +578,10 @@ def maak_share_image(titel, filosoof_naam, filosoof_emoji, gedachte, commentaar,
     draw.rectangle([0, 0, width-1, height-1], outline=border_color, width=12)
     draw.rectangle([15, 15, width-16, height-16], outline=border_color, width=2)
     try:
-        text_font = ImageFont.truetype("arial.ttf", 32)
-        footer_font = ImageFont.truetype("arial.ttf", 22)
-        emoji_font_logo = ImageFont.truetype("C:/Windows/Fonts/seguiemj.ttf", 44)
-        emoji_font_phil = ImageFont.truetype("C:/Windows/Fonts/seguiemj.ttf", 56)
+        text_font = ImageFont.truetype("arial.ttf", 64)
+        footer_font = ImageFont.truetype("arial.ttf", 44)
+        emoji_font_logo = ImageFont.truetype("C:/Windows/Fonts/seguiemj.ttf", 88)
+        emoji_font_phil = ImageFont.truetype("C:/Windows/Fonts/seguiemj.ttf", 112)
     except:
         text_font = footer_font = emoji_font_logo = emoji_font_phil = ImageFont.load_default()
 
