@@ -627,7 +627,7 @@ def maak_share_image(titel, filosoof_naam, filosoof_emoji, gedachte, commentaar,
         regels.append(' '.join(huidige_regel))
     
     # Teken maximaal 5 regels
-    for regel in regels[:5]:
+    for regel in regels[:7]:
         bbox = draw.textbbox((0, 0), regel, font=tekst_font)
         tekst_breedte = bbox[2] - bbox[0]
         x = (width - tekst_breedte) // 2
