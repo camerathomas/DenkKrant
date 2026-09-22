@@ -583,9 +583,9 @@ def maak_share_image(titel, filosoof_naam, filosoof_emoji, gedachte, commentaar,
             return ImageFont.load_default()
     
     # Grote, leesbare fonts
-    titel_font = haal_font(32)        # Filosoof naam
-    subtitle_font = haal_font(25)     # "Over: ..."
-    tekst_font = haal_font(21)        # Hoofdtekst
+    titel_font = haal_font(42)        # Filosoof naam
+    subtitle_font = haal_font(28)     # "Over: ..."
+    tekst_font = haal_font(25)        # Hoofdtekst
     footer_font = haal_font(18)       # Watermerk
     
     y = 30
