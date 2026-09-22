@@ -566,61 +566,109 @@ def maak_share_urls(filosoof, titel, gedachte, commentaar=""):
     }, base_text
 
 def maak_share_image(titel, filosoof_naam, filosoof_emoji, gedachte, commentaar, is_premium):
+    import os
+    from PIL import Image, ImageDraw, ImageFont
+    
     width, height = 1200, 630
     img = Image.new('RGB', (width, height), color='#0f172a')
     draw = ImageDraw.Draw(img)
+    
+    # Gradient achtergrond
     for y in range(height):
         r = int(15 + (y / height) * 15)
         g = int(23 + (y / height) * 5)
         b = int(42 + (y / height) * 40)
         draw.line([(0, y), (width, y)], fill=(r, g, b))
+    
     border_color = '#FFD700' if is_premium else '#94a3b8'
     draw.rectangle([0, 0, width-1, height-1], outline=border_color, width=12)
     draw.rectangle([15, 15, width-16, height-16], outline=border_color, width=2)
-    try:
-        text_font = ImageFont.truetype("arial.ttf", 64)
-        footer_font = ImageFont.truetype("arial.ttf", 44)
-        emoji_font_logo = ImageFont.truetype("C:/Windows/Fonts/seguiemj.ttf", 42)
-        emoji_font_phil = ImageFont.truetype("C:/Windows/Fonts/seguiemj.ttf", 96)
-    except:
-        text_font       = ImageFont.truetype(alt, 64)
-        footer_font     = ImageFont.truetype(alt, 44)
-        emoji_font_logo = ImageFont.truetype(alt, 42)
-        emoji_font_phil = ImageFont.truetype(alt, 96)
-        
-    def draw_centered_text(y_pos, text, font, fill_color):
+    
+    # Robuust font laden (probeert Windows, dan Linux/Streamlit, dan fallback)
+    def laad_font(naam, grootte):
+        paden = [
+            f"C:/Windows/Fonts/{naam}",
+            f"/usr/share/fonts/truetype/dejavu/{naam}",
+            f"/usr/share/fonts/truetype/liberation/{naam}",
+            naam
+        ]
+        for p in paden:
+            try:
+                if os.path.exists(p):
+                    return ImageFont.truetype(p, grootte)
+            except:
+                continue
+        return ImageFont.load_default()
+
+    # Gebruik aparte fonts voor tekst en emoji's! Dit voorkomt dat tekst klein wordt.
+    tekst_font = laad_font("DejaVuSans.ttf", 48)       # Hoofdtekst (groot en leesbaar)
+    footer_font = laad_font("DejaVuSans.ttf", 32)      # Titels en footer
+    emoji_font_logo = laad_font("DejaVuSans-Bold.ttf", 64)  # Logo emoji's
+    emoji_font_phil = laad_font("DejaVuSans-Bold.ttf", 80)  # Filosoof emoji
+
+    def draw_centered_text(y_pos, text, font, fill_color, gap=10):
         bbox = draw.textbbox((0, 0), text, font=font)
         text_width = bbox[2] - bbox[0]
+        text_height = bbox[3] - bbox[1]
         x = (width - text_width) // 2
-        draw.text((x, y_pos), text, fill=fill_color, font=font)
-        return y_pos + (bbox[3] - bbox[1]) + 10
+        draw.text((x, y_pos - bbox[1]), text, fill=fill_color, font=font)
+        return y_pos + text_height + gap
 
     y = 40
-    y = draw_centered_text(y, "🧠 📰 🤔 DenkKrant", emoji_font_logo, '#ffffff')
+    
+    # 1. Logo: Emoji's en tekst gescheiden getekend (voorkomt kromgetrokken tekst)
+    logo_emoji = "🧠 📰 🤔"
+    bbox_e = draw.textbbox((0, 0), logo_emoji, font=emoji_font_logo)
+    bbox_t = draw.textbbox((0, 0), " DenkKrant", font=tekst_font)
+    totaal_breedte = (bbox_e[2] - bbox_e[0]) + (bbox_t[2] - bbox_t[0])
+    x_start = (width - totaal_breedte) // 2
+    draw.text((x_start, y), logo_emoji, font=emoji_font_logo, fill='#ffffff')
+    draw.text((x_start + (bbox_e[2] - bbox_e[0]), y), " DenkKrant", font=tekst_font, fill='#ffffff')
+    y += max(bbox_e[3] - bbox_e[1], bbox_t[3] - bbox_t[1]) + 15
+
+    # 2. Titel
     if titel:
-        y += 10
-        y = draw_centered_text(y, t["share_image_over"].format(titel=titel[:60] + ('...' if len(titel)>60 else '')), footer_font, '#94a3b8')        
-    y += 20
-    y = draw_centered_text(y, f"{filosoof_emoji} {filosoof_naam}", emoji_font_phil, '#FFD700')
-    y += 20
+        korte_titel = titel[:60] + ('...' if len(titel) > 60 else '')
+        y = draw_centered_text(y, f"Over: {korte_titel}", footer_font, '#94a3b8')
+
+    # 3. Filosoof: Emoji en naam gescheiden getekend
+    y += 15
+    bbox_e = draw.textbbox((0, 0), filosoof_emoji, font=emoji_font_phil)
+    bbox_t = draw.textbbox((0, 0), f" {filosoof_naam}", font=tekst_font)
+    totaal_breedte = (bbox_e[2] - bbox_e[0]) + (bbox_t[2] - bbox_t[0])
+    x_start = (width - totaal_breedte) // 2
+    draw.text((x_start, y), filosoof_emoji, font=emoji_font_phil, fill='#FFD700')
+    draw.text((x_start + (bbox_e[2] - bbox_e[0]), y), f" {filosoof_naam}", font=tekst_font, fill='#FFD700')
+    y += max(bbox_e[3] - bbox_e[1], bbox_t[3] - bbox_t[1]) + 25
+
+    # 4. Gedachte-tekst wrappen
     words = gedachte.split()
     lines, current_line = [], []
     max_width = width - 160
     for word in words:
         test_line = ' '.join(current_line + [word])
-        bbox = draw.textbbox((0, 0), test_line, font=text_font)
+        bbox = draw.textbbox((0, 0), test_line, font=tekst_font)
         if bbox[2] - bbox[0] <= max_width:
             current_line.append(word)
         else:
-            lines.append(' '.join(current_line))
+            if current_line:
+                lines.append(' '.join(current_line))
             current_line = [word]
     if current_line:
         lines.append(' '.join(current_line))
-    for line in lines[:9]:
-        y = draw_centered_text(y, line, text_font, '#e2e8f0')
-    if commentaar:
-        y += 20
-    draw_centered_text(height - 50, t["share_image_footer"], footer_font, '#64748b')            
+
+    # Dynamisch bepalen hoeveel regels passen (voorkomt dat tekst buiten beeld valt)
+    footer_ruimte = 80
+    regel_hoogte = draw.textbbox((0, 0), "Ag", font=tekst_font)[3] + 10
+    beschikbaar = height - y - footer_ruimte
+    max_regels = max(1, int(beschikbaar // regel_hoogte))
+
+    for line in lines[:max_regels]:
+        y = draw_centered_text(y, line, tekst_font, '#e2e8f0')
+
+    # 5. Footer
+    draw_centered_text(height - 50, "Gemaakt met DenkKrant", footer_font, '#64748b')
+    
     return img
 
 async def genereer_audio(tekst, geslacht="male"):
