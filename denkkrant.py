@@ -598,10 +598,10 @@ def maak_share_image(titel, filosoof_naam, filosoof_emoji, gedachte, commentaar,
                    "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
                    "C:/Windows/Fonts/seguiemj.ttf"]
 
-    text_font       = laad_font(TEXT_PADEN, 52)
-    footer_font     = laad_font(TEXT_PADEN, 28)
-    emoji_font_logo = laad_font(EMOJI_PADEN, 56)
-    emoji_font_phil = laad_font(EMOJI_PADEN, 72)
+    text_font       = laad_font(TEXT_PADEN, 100)
+    footer_font     = laad_font(TEXT_PADEN, 50)
+    emoji_font_logo = laad_font(EMOJI_PADEN, 90)
+    emoji_font_phil = laad_font(EMOJI_PADEN, 100)
 
     def draw_centered_text(y_pos, text, font, fill_color):
         bbox = draw.textbbox((0, 0), text, font=font)
