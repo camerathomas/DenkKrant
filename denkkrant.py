@@ -574,10 +574,12 @@ def maak_share_image(titel, filosoof_naam, filosoof_emoji, gedachte, commentaar,
     
     # Alleen Linux fonts (Streamlit Cloud)
     def haal_font(grootte):
-        paden = [
-            "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
-            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
-            "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+        try:
+            # Font in je eigen repo (werkt ALTIJD)
+            return ImageFont.truetype("Roboto-Regular.ttf", grootte)
+        except Exception as e:
+            print(f"⚠️ Roboto font niet gevonden: {e}")
+            return ImageFont.load_default()
         ]
         for pad in paden:
             try:
