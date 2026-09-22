@@ -580,11 +580,14 @@ def maak_share_image(titel, filosoof_naam, filosoof_emoji, gedachte, commentaar,
     try:
         text_font = ImageFont.truetype("arial.ttf", 64)
         footer_font = ImageFont.truetype("arial.ttf", 44)
-        emoji_font_logo = ImageFont.truetype("C:/Windows/Fonts/seguiemj.ttf", 88)
-        emoji_font_phil = ImageFont.truetype("C:/Windows/Fonts/seguiemj.ttf", 112)
+        emoji_font_logo = ImageFont.truetype("C:/Windows/Fonts/seguiemj.ttf", 42)
+        emoji_font_phil = ImageFont.truetype("C:/Windows/Fonts/seguiemj.ttf", 96)
     except:
-        text_font = footer_font = emoji_font_logo = emoji_font_phil = ImageFont.load_default()
-
+        text_font       = ImageFont.truetype(alt, 64)
+        footer_font     = ImageFont.truetype(alt, 44)
+        emoji_font_logo = ImageFont.truetype(alt, 42)
+        emoji_font_phil = ImageFont.truetype(alt, 96)
+        
     def draw_centered_text(y_pos, text, font, fill_color):
         bbox = draw.textbbox((0, 0), text, font=font)
         text_width = bbox[2] - bbox[0]
