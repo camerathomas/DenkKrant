@@ -567,66 +567,58 @@ def maak_share_urls(filosoof, titel, gedachte, commentaar=""):
 
 def maak_share_image(titel, filosoof_naam, filosoof_emoji, gedachte, commentaar, is_premium):
     from PIL import Image, ImageDraw, ImageFont
-    import os
     
-    # Afmetingen: 900px breed (social media vriendelijk)
     width, height = 900, 630
-    img = Image.new('RGB', (width, height), color='#1e3a8a')  # Duidelijk blauw
+    img = Image.new('RGB', (width, height), color='#1e3a8a')  # Blauwe achtergrond
     draw = ImageDraw.Draw(img)
     
-    # Rand (goud voor premium, zilver voor free)
-    border_color = '#FFD700' if is_premium else '#94a3b8'
-    draw.rectangle([0, 0, width-1, height-1], outline=border_color, width=8)
-    
-    # VEILIGE FONT LOADER - werkt op Windows én Linux
+    # Alleen Linux fonts (Streamlit Cloud)
     def haal_font(grootte):
-        font_paden = [
-            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
-            "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+        paden = [
             "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
-            "C:/Windows/Fonts/arial.ttf",
-            "C:/Windows/Fonts/arialbd.ttf",
-            "arial.ttf",
-            "DejaVuSans.ttf"
+            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+            "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
         ]
-        for pad in font_paden:
+        for pad in paden:
             try:
-                return ImageFont.truetype(pad, grootte)
+                font = ImageFont.truetype(pad, grootte)
+                print(f"✅ Font geladen: {pad}")
+                return font
             except Exception:
                 continue
+        print("⚠️ Geen font gevonden!")
         return ImageFont.load_default()
     
-    # Fonts met duidelijke groottes
-    titel_font = haal_font(84)        # Filosoof naam (groot)
-    subtitle_font = haal_font(48)     # "Over: ..." (middel)
-    tekst_font = haal_font(56)        # Hoofdtekst (leesbaar)
-    footer_font = haal_font(36)       # Watermerk (klein)
+    # Grote, leesbare fonts
+    titel_font = haal_font(64)        # Filosoof naam
+    subtitle_font = haal_font(36)     # "Over: ..."
+    tekst_font = haal_font(42)        # Hoofdtekst
+    footer_font = haal_font(24)       # Watermerk
     
-    # Start positie
-    y = 40
+    y = 30
     
-    # 1. FILOSOOF NAAM (titel)
+    # 1. FILOSOOF NAAM (goud)
     bbox = draw.textbbox((0, 0), filosoof_naam, font=titel_font)
     tekst_breedte = bbox[2] - bbox[0]
     x = (width - tekst_breedte) // 2
     draw.text((x, y), filosoof_naam, fill='#FFD700', font=titel_font)
-    y += 60
+    y += 80
     
     # 2. SUBTITLE: "Over: [krantenkop]"
     if titel:
-        korte_titel = titel[:70] + ('...' if len(titel) > 70 else '')
+        korte_titel = titel[:50] + ('...' if len(titel) > 50 else '')
         subtitle = f"Over: {korte_titel}"
         bbox = draw.textbbox((0, 0), subtitle, font=subtitle_font)
         tekst_breedte = bbox[2] - bbox[0]
         x = (width - tekst_breedte) // 2
         draw.text((x, y), subtitle, fill='#93c5fd', font=subtitle_font)
-        y += 50
+        y += 70
     
-    # 3. HOOFDTEKST (gedachte) - met automatische wrap
+    # 3. HOOFDTEKST (wit)
     woorden = gedachte.split()
     regels = []
     huidige_regel = []
-    max_breedte = width - 100  # marge aan beide kanten
+    max_breedte = width - 80
     
     for woord in woorden:
         test_regel = ' '.join(huidige_regel + [woord])
@@ -641,13 +633,13 @@ def maak_share_image(titel, filosoof_naam, filosoof_emoji, gedachte, commentaar,
     if huidige_regel:
         regels.append(' '.join(huidige_regel))
     
-    # Teken de regels (max 8 regels om buiten beeld te voorkomen)
-    for regel in regels[:8]:
+    # Teken maximaal 5 regels
+    for regel in regels[:5]:
         bbox = draw.textbbox((0, 0), regel, font=tekst_font)
         tekst_breedte = bbox[2] - bbox[0]
         x = (width - tekst_breedte) // 2
         draw.text((x, y), regel, fill='#ffffff', font=tekst_font)
-        y += 40
+        y += 65
     
     # 4. WATERMERK onderaan
     watermark = "denkkrant.stream.app"
