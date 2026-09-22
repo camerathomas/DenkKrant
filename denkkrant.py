@@ -566,94 +566,96 @@ def maak_share_urls(filosoof, titel, gedachte, commentaar=""):
     }, base_text
 
 def maak_share_image(titel, filosoof_naam, filosoof_emoji, gedachte, commentaar, is_premium):
-    width, height = 1200, 630
-    img = Image.new('RGB', (width, height), color='#0f172a')
+    from PIL import Image, ImageDraw, ImageFont
+    import os
+    
+    # Afmetingen: 900px breed (social media vriendelijk)
+    width, height = 900, 630
+    img = Image.new('RGB', (width, height), color='#1e3a8a')  # Duidelijk blauw
     draw = ImageDraw.Draw(img)
-
-    # Gradient achtergrond
-    for y in range(height):
-        r = int(15 + (y / height) * 15)
-        g = int(23 + (y / height) * 5)
-        b = int(42 + (y / height) * 40)
-        draw.line([(0, y), (width, y)], fill=(r, g, b))
-
+    
+    # Rand (goud voor premium, zilver voor free)
     border_color = '#FFD700' if is_premium else '#94a3b8'
-    draw.rectangle([0, 0, width-1, height-1], outline=border_color, width=12)
-    draw.rectangle([15, 15, width-16, height-16], outline=border_color, width=2)
-
-    # === FONTS: Linux-first, met Windows als fallback ===
-import os
-
-def laad_font(paden, grootte):
-    for pad in paden:
-        try:
-            return ImageFont.truetype(pad, grootte)
-        except Exception:
-            continue
-    return ImageFont.load_default()
-
-# Tekst: DejaVu op Linux, Arial op Windows
-TEXT_PADEN = [
-    "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",  # Linux standaard
-    "C:/Windows/Fonts/arial.ttf",                        # Windows
-    "arial.ttf"
-]
-
-# Emoji: Noto Color Emoji op Linux, Segoe UI Emoji op Windows
-EMOJI_PADEN = [
-    "/usr/share/fonts/truetype/noto/NotoColorEmoji.ttf",  # Linux kleurenemoji
-    "C:/Windows/Fonts/seguiemj.ttf",                      # Windows kleurenemoji
-    "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"     # fallback (zwart-wit)
-]
-
-text_font       = laad_font(TEXT_PADEN, 56)
-footer_font     = laad_font(TEXT_PADEN, 32)
-emoji_font_logo = laad_font(EMOJI_PADEN, 72)
-emoji_font_phil = laad_font(EMOJI_PADEN, 96)
-
-def draw_centered_text(y_pos, text, font, fill_color, embedded=False):
-    bbox = draw.textbbox((0, 0), text, font=font)
-    text_width = bbox[2] - bbox[0]
-    x = (width - text_width) // 2
-    draw.text((x, y_pos), text, font=font, fill=fill_color,
-              embedded_color=embedded)
-    return y_pos + (bbox[3] - bbox[1]) + 10
-
+    draw.rectangle([0, 0, width-1, height-1], outline=border_color, width=8)
+    
+    # VEILIGE FONT LOADER - werkt op Windows én Linux
+    def haal_font(grootte):
+        font_paden = [
+            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+            "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+            "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
+            "C:/Windows/Fonts/arial.ttf",
+            "C:/Windows/Fonts/arialbd.ttf",
+            "arial.ttf",
+            "DejaVuSans.ttf"
+        ]
+        for pad in font_paden:
+            try:
+                return ImageFont.truetype(pad, grootte)
+            except Exception:
+                continue
+        return ImageFont.load_default()
+    
+    # Fonts met duidelijke groottes
+    titel_font = haal_font(42)        # Filosoof naam (groot)
+    subtitle_font = haal_font(24)     # "Over: ..." (middel)
+    tekst_font = haal_font(28)        # Hoofdtekst (leesbaar)
+    footer_font = haal_font(18)       # Watermerk (klein)
+    
+    # Start positie
     y = 40
-    y = draw_centered_text(y, "🧠  🤔 DenkKrant", emoji_font_logo, '#ffffff')
-
+    
+    # 1. FILOSOOF NAAM (titel)
+    bbox = draw.textbbox((0, 0), filosoof_naam, font=titel_font)
+    tekst_breedte = bbox[2] - bbox[0]
+    x = (width - tekst_breedte) // 2
+    draw.text((x, y), filosoof_naam, fill='#FFD700', font=titel_font)
+    y += 60
+    
+    # 2. SUBTITLE: "Over: [krantenkop]"
     if titel:
-        y += 10
-        y = draw_centered_text(y, t["share_image_over"].format(titel=titel[:60] + ('...' if len(titel)>60 else '')), footer_font, '#94a3b8')
-
-    y += 20
-    y = draw_centered_text(y, f"{filosoof_emoji} {filosoof_naam}", emoji_font_phil, '#FFD700')
-    y += 20
-
-    # Tekst wrappen
-    words = gedachte.split()
-    lines, current_line = [], []
-    max_width = width - 160
-    for word in words:
-        test_line = ' '.join(current_line + [word])
-        bbox = draw.textbbox((0, 0), test_line, font=text_font)
-        if bbox[2] - bbox[0] <= max_width:
-            current_line.append(word)
+        korte_titel = titel[:70] + ('...' if len(titel) > 70 else '')
+        subtitle = f"Over: {korte_titel}"
+        bbox = draw.textbbox((0, 0), subtitle, font=subtitle_font)
+        tekst_breedte = bbox[2] - bbox[0]
+        x = (width - tekst_breedte) // 2
+        draw.text((x, y), subtitle, fill='#93c5fd', font=subtitle_font)
+        y += 50
+    
+    # 3. HOOFDTEKST (gedachte) - met automatische wrap
+    woorden = gedachte.split()
+    regels = []
+    huidige_regel = []
+    max_breedte = width - 100  # marge aan beide kanten
+    
+    for woord in woorden:
+        test_regel = ' '.join(huidige_regel + [woord])
+        bbox = draw.textbbox((0, 0), test_regel, font=tekst_font)
+        if bbox[2] - bbox[0] <= max_breedte:
+            huidige_regel.append(woord)
         else:
-            lines.append(' '.join(current_line))
-            current_line = [word]
-    if current_line:
-        lines.append(' '.join(current_line))
-
-    for line in lines[:9]:
-        y = draw_centered_text(y, line, text_font, '#e2e8f0')
-
-    if commentaar:
-        y += 20
-        y = draw_centered_text(y, commentaar, footer_font, '#94a3b8')
-
-    draw_centered_text(height - 50, t["share_image_footer"], footer_font, '#64748b')
-
+            if huidige_regel:
+                regels.append(' '.join(huidige_regel))
+            huidige_regel = [woord]
+    
+    if huidige_regel:
+        regels.append(' '.join(huidige_regel))
+    
+    # Teken de regels (max 8 regels om buiten beeld te voorkomen)
+    for regel in regels[:8]:
+        bbox = draw.textbbox((0, 0), regel, font=tekst_font)
+        tekst_breedte = bbox[2] - bbox[0]
+        x = (width - tekst_breedte) // 2
+        draw.text((x, y), regel, fill='#ffffff', font=tekst_font)
+        y += 40
+    
+    # 4. WATERMERK onderaan
+    watermark = "denkkrant.stream.app"
+    bbox = draw.textbbox((0, 0), watermark, font=footer_font)
+    tekst_breedte = bbox[2] - bbox[0]
+    x = (width - tekst_breedte) // 2
+    draw.text((x, height - 40), watermark, fill='#60a5fa', font=footer_font)
+    
     return img
 
 async def genereer_audio(tekst, geslacht="male"):
