@@ -572,24 +572,15 @@ def maak_share_image(titel, filosoof_naam, filosoof_emoji, gedachte, commentaar,
     img = Image.new('RGB', (width, height), color='#1e3a8a')  # Blauwe achtergrond
     draw = ImageDraw.Draw(img)
     
-    # Alleen Linux fonts (Streamlit Cloud)
+    # EENVOUDIGE EN VEILIGE FONT LOADER
     def haal_font(grootte):
         try:
-            # Font in je eigen repo (werkt ALTIJD)
+            # Dit pakt het bestand dat je zojuist naar GitHub hebt gepusht!
             return ImageFont.truetype("Roboto-Regular.ttf", grootte)
         except Exception as e:
             print(f"⚠️ Roboto font niet gevonden: {e}")
+            # Als het echt misgaat, valt hij terug op default (maar dit zou nu niet meer mogen)
             return ImageFont.load_default()
-        ]
-        for pad in paden:
-            try:
-                font = ImageFont.truetype(pad, grootte)
-                print(f"✅ Font geladen: {pad}")
-                return font
-            except Exception:
-                continue
-        print("⚠️ Geen font gevonden!")
-        return ImageFont.load_default()
     
     # Grote, leesbare fonts
     titel_font = haal_font(64)        # Filosoof naam
