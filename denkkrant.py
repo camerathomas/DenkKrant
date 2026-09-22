@@ -569,29 +569,39 @@ def maak_share_image(titel, filosoof_naam, filosoof_emoji, gedachte, commentaar,
     width, height = 1200, 630
     img = Image.new('RGB', (width, height), color='#0f172a')
     draw = ImageDraw.Draw(img)
-    
+
     # Gradient achtergrond
     for y in range(height):
         r = int(15 + (y / height) * 15)
         g = int(23 + (y / height) * 5)
         b = int(42 + (y / height) * 40)
         draw.line([(0, y), (width, y)], fill=(r, g, b))
-    
+
     border_color = '#FFD700' if is_premium else '#94a3b8'
     draw.rectangle([0, 0, width-1, height-1], outline=border_color, width=12)
     draw.rectangle([15, 15, width-16, height-16], outline=border_color, width=2)
-    
-    try:
-        text_font = ImageFont.truetype("arial.ttf", 32)
-        footer_font = ImageFont.truetype("arial.ttf", 22)
-        emoji_font_logo = ImageFont.truetype("C:/Windows/Fonts/seguiemj.ttf", 44)
-        emoji_font_phil = ImageFont.truetype("C:/Windows/Fonts/seguiemj.ttf", 56)
-    except:
-        # ALLEEN DIT IS VERANDERD: gebruik DejaVu fonts op Linux/Streamlit
-        text_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 32)
-        footer_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 22)
-        emoji_font_logo = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 44)
-        emoji_font_phil = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 56)
+
+    # === FONTS: Linux-first, met Windows als fallback ===
+    def laad_font(paden, grootte):
+        for pad in paden:
+            try:
+                return ImageFont.truetype(pad, grootte)
+            except Exception:
+                continue
+        return ImageFont.load_default()
+
+    TEXT_PADEN  = ["/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+                   "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
+                   "C:/Windows/Fonts/arial.ttf",
+                   "arial.ttf"]
+    EMOJI_PADEN = ["/usr/share/fonts/truetype/noto/NotoColorEmoji.ttf",
+                   "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+                   "C:/Windows/Fonts/seguiemj.ttf"]
+
+    text_font       = laad_font(TEXT_PADEN, 32)
+    footer_font     = laad_font(TEXT_PADEN, 22)
+    emoji_font_logo = laad_font(EMOJI_PADEN, 44)
+    emoji_font_phil = laad_font(EMOJI_PADEN, 56)
 
     def draw_centered_text(y_pos, text, font, fill_color):
         bbox = draw.textbbox((0, 0), text, font=font)
@@ -602,15 +612,15 @@ def maak_share_image(titel, filosoof_naam, filosoof_emoji, gedachte, commentaar,
 
     y = 40
     y = draw_centered_text(y, "🧠  🤔 DenkKrant", emoji_font_logo, '#ffffff')
-    
+
     if titel:
         y += 10
-        y = draw_centered_text(y, t["share_image_over"].format(titel=titel[:60] + ('...' if len(titel)>60 else '')), footer_font, '#94a3b8')        
-    
+        y = draw_centered_text(y, t["share_image_over"].format(titel=titel[:60] + ('...' if len(titel)>60 else '')), footer_font, '#94a3b8')
+
     y += 20
     y = draw_centered_text(y, f"{filosoof_emoji} {filosoof_naam}", emoji_font_phil, '#FFD700')
     y += 20
-    
+
     # Tekst wrappen
     words = gedachte.split()
     lines, current_line = [], []
@@ -625,17 +635,18 @@ def maak_share_image(titel, filosoof_naam, filosoof_emoji, gedachte, commentaar,
             current_line = [word]
     if current_line:
         lines.append(' '.join(current_line))
-    
+
     for line in lines[:9]:
         y = draw_centered_text(y, line, text_font, '#e2e8f0')
-    
+
     if commentaar:
         y += 20
-    
+        y = draw_centered_text(y, commentaar, footer_font, '#94a3b8')
+
     draw_centered_text(height - 50, t["share_image_footer"], footer_font, '#64748b')
-    
+
     return img
-    
+
 async def genereer_audio(tekst, geslacht="male"):
     taal = st.session_state.get('taal', 'nl')
     if taal == 'en':
