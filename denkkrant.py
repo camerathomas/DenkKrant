@@ -583,10 +583,10 @@ def maak_share_image(titel, filosoof_naam, filosoof_emoji, gedachte, commentaar,
             return ImageFont.load_default()
     
     # Grote, leesbare fonts
-    titel_font = haal_font(64)        # Filosoof naam
-    subtitle_font = haal_font(36)     # "Over: ..."
-    tekst_font = haal_font(42)        # Hoofdtekst
-    footer_font = haal_font(24)       # Watermerk
+    titel_font = haal_font(32)        # Filosoof naam
+    subtitle_font = haal_font(25)     # "Over: ..."
+    tekst_font = haal_font(21)        # Hoofdtekst
+    footer_font = haal_font(18)       # Watermerk
     
     y = 30
     
@@ -632,7 +632,7 @@ def maak_share_image(titel, filosoof_naam, filosoof_emoji, gedachte, commentaar,
         tekst_breedte = bbox[2] - bbox[0]
         x = (width - tekst_breedte) // 2
         draw.text((x, y), regel, fill='#ffffff', font=tekst_font)
-        y += 65
+        y += 45
     
     # 4. WATERMERK onderaan
     watermark = "denkkrant.stream.app"
