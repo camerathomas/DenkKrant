@@ -376,67 +376,74 @@ def maak_mollie_betaling(tier="premium"):
         "premium": "5.00",
         "gold": "15.00"
     }
-    
     bedrag = bedragen.get(tier, "5.00")
-    activation_code = genereer_activation_code(tier)
+    
+    # Onthoud in de sessie wat de gebruiker probeert te kopen
+    st.session_state.pending_tier = tier
+    st.session_state.pending_user_id = st.session_state.user_id
     
     try:
-        # 1. Eerst de betaling bij Mollie aanmaken
+        # 1. Betaling aanmaken bij Mollie
         payment = client.payments.create({
             'amount': {'currency': 'EUR', 'value': bedrag},
             'description': f'DenkKrant {tier.capitalize()} upgrade',
-            # We sturen de gebruiker terug met de payment_id, NIET met de activation_code
-            'redirectUrl': f'https://denkkrant.streamlit.app/?payment_id={payment.id}', # <--- NIEUW
+            # Simpele return URL, zonder payment.id (want die bestaat nu nog niet)
+            'redirectUrl': 'https://denkkrant.streamlit.app/?mollie_return=1', 
             'webhookUrl': 'https://denkkrant.streamlit.app/?webhook=mollie',
-            'metadata': {'tier': tier, 'user_id': st.session_state.user_id, 'activation_code': activation_code}
+            'metadata': {
+                'user_id': str(st.session_state.user_id),
+                'tier': tier
+            }
         })
         
-        # 2. Nu we de betaling hebben, halen we de unieke Mollie ID eruit
-        mollie_payment_id = payment.id  # <--- NIEUW (bijv. "tr_12345abc")
-        
-        # 3. Nu slaan we alles op in de database (inclusief de nieuwe payment_id)
-        # Let op: je moet je 'sla_gebruiker_op' functie hier misschien even voor aanpassen
-        sla_gebruiker_op(st.session_state.user_id, tier, activation_code, mollie_payment_id) # <--- AANGEPAST
+        # 2. Nu de betaling wél is aangemaakt, onthouden we de ID in de sessie
+        st.session_state.pending_payment_id = payment.id
         
         checkout_url = payment['_links']['checkout']['href']
-        
-        # We geven nu de mollie_payment_id terug in plaats van de activation_code
-        return checkout_url, mollie_payment_id # <--- AANGEPAST
+        return checkout_url, payment.id 
         
     except Exception as e:
         st.error(f"Mollie betaling fout: {e}")
         return None, None
-
+# 9. MOLLIE BETALING CONTROLE (Veilige sessie-versie)
 # ==========================================
-# 4. DATABASE QUERY FUNCTIES
-# ==========================================
-# 9. MOLLIE BETALING CONTROLE (Veilige versie)
-# ==========================================
-if "payment_id" in st.query_params:
-    payment_id = st.query_params["payment_id"]
+if "mollie_return" in st.query_params:
+    payment_id = st.session_state.get("pending_payment_id")
+    user_id = st.session_state.get("pending_user_id")
+    tier = st.session_state.get("pending_tier")
     
-    with st.spinner("Betaling controleren bij Mollie..."):
-        is_betaald, result = valideer_mollie_betaling(payment_id)
-        
-        if is_betaald and result:
-            user_id, membership_tier = result
-            
-            # Sla de definitieve, geverifieerde status op
-            sla_gebruiker_op(user_id, membership_tier, mollie_payment_id=payment_id)
-            
-            # Update de sessie zodat de app direct Premium/Gold functies toont
-            st.session_state.membership_tier = membership_tier
-            
-            st.success(f"✅ Betaling ontvangen! Je {membership_tier} lidmaatschap is geactiveerd!")
-            st.balloons()
-            
-            # Maak de URL weer schoon
-            del st.query_params["payment_id"]
-            st.rerun()
-            
-        else:
-            st.error("Betaling niet gevonden of nog niet voldaan. Wacht even of probeer het opnieuw.")
-            del st.query_params["payment_id"]
+    if payment_id and user_id and tier:
+        with st.spinner("Betaling controleren bij Mollie..."):
+            client = get_mollie_client()
+            try:
+                # Vraag direct aan Mollie of deze specifieke betaling gelukt is
+                payment = client.payments.get(payment_id)
+                
+                if payment.is_paid():
+                    # ✅ Betaling is echt gelukt!
+                    sla_gebruiker_op(user_id, tier, mollie_payment_id=payment_id)
+                    st.session_state.membership_tier = tier
+                    
+                    st.success(f"✅ Betaling ontvangen! Je {tier} lidmaatschap is geactiveerd!")
+                    st.balloons()
+                    
+                    # URL en sessie schoonmaken
+                    del st.query_params["mollie_return"]
+                    st.session_state.pop("pending_payment_id", None)
+                    st.session_state.pop("pending_tier", None)
+                    st.session_state.pop("pending_user_id", None)
+                    
+                    st.rerun()
+                else:
+                    st.warning("Betaling is nog niet afgerond of geannuleerd.")
+                    del st.query_params["mollie_return"]
+                    
+            except Exception as e:
+                st.error(f"Kon betaling niet controleren: {e}")
+                del st.query_params["mollie_return"]
+    else:
+        st.error("Sessie verlopen. Probeer de betaling opnieuw.")
+        del st.query_params["mollie_return"]
 
 def sla_gebruiker_op(user_id, membership_tier="free", activation_code=None, mollie_payment_id=None):
     conn = sqlite3.connect(DB_PATH)
