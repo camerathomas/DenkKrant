@@ -459,10 +459,20 @@ if "mollie_check" in st.query_params:
 def sla_gebruiker_op(user_id, membership_tier="free", activation_code=None, mollie_payment_id=None):
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
+    
+    # Fail-safe: maak de kolom aan als hij niet bestaat
+    try:
+        c.execute("ALTER TABLE users ADD COLUMN mollie_payment_id TEXT")
+        conn.commit()
+    except sqlite3.OperationalError:
+        pass # Kolom bestaat al, dat is prima
+    
+    # Nu opslaan
     c.execute("""
         INSERT OR REPLACE INTO users (user_id, membership_tier, activation_code, mollie_payment_id, last_payment_at)
         VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
     """, (user_id, membership_tier, activation_code, mollie_payment_id))
+    
     conn.commit()
     conn.close()
 
