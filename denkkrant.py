@@ -1583,7 +1583,3 @@ if "payment_id" in st.query_params:
         else:
             st.error("Betaling niet gevonden of nog niet voldaan. Wacht even of probeer het opnieuw.")
             del st.query_params["payment_id"]  
-# ==========================================
-# STARTUP: Zorg dat de database klaar is voor Mollie
-# ==========================================
-upgrade_database_voor_mollie()        
