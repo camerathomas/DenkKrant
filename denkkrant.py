@@ -380,33 +380,71 @@ def maak_mollie_betaling(tier="premium"):
     bedrag = bedragen.get(tier, "5.00")
     activation_code = genereer_activation_code(tier)
     
-    # Code opslaan in database VOOR we naar Mollie gaan
-    sla_gebruiker_op(st.session_state.user_id, tier, activation_code)
-    
     try:
+        # 1. Eerst de betaling bij Mollie aanmaken
         payment = client.payments.create({
             'amount': {'currency': 'EUR', 'value': bedrag},
             'description': f'DenkKrant {tier.capitalize()} upgrade',
-            'redirectUrl': f'https://denkkrant.streamlit.app/?payment=success&code={activation_code}',
+            # We sturen de gebruiker terug met de payment_id, NIET met de activation_code
+            'redirectUrl': f'https://denkkrant.streamlit.app/?payment_id={payment.id}', # <--- NIEUW
             'webhookUrl': 'https://denkkrant.streamlit.app/?webhook=mollie',
             'metadata': {'tier': tier, 'user_id': st.session_state.user_id, 'activation_code': activation_code}
         })
+        
+        # 2. Nu we de betaling hebben, halen we de unieke Mollie ID eruit
+        mollie_payment_id = payment.id  # <--- NIEUW (bijv. "tr_12345abc")
+        
+        # 3. Nu slaan we alles op in de database (inclusief de nieuwe payment_id)
+        # Let op: je moet je 'sla_gebruiker_op' functie hier misschien even voor aanpassen
+        sla_gebruiker_op(st.session_state.user_id, tier, activation_code, mollie_payment_id) # <--- AANGEPAST
+        
         checkout_url = payment['_links']['checkout']['href']
-        return checkout_url, activation_code
+        
+        # We geven nu de mollie_payment_id terug in plaats van de activation_code
+        return checkout_url, mollie_payment_id # <--- AANGEPAST
+        
     except Exception as e:
         st.error(f"Mollie betaling fout: {e}")
-        return None, None 
+        return None, None
 
 # ==========================================
 # 4. DATABASE QUERY FUNCTIES
 # ==========================================
-def sla_gebruiker_op(user_id, membership_tier="free", activation_code=None):
+# 9. MOLLIE BETALING CONTROLE (Veilige versie)
+# ==========================================
+if "payment_id" in st.query_params:
+    payment_id = st.query_params["payment_id"]
+    
+    with st.spinner("Betaling controleren bij Mollie..."):
+        is_betaald, result = valideer_mollie_betaling(payment_id)
+        
+        if is_betaald and result:
+            user_id, membership_tier = result
+            
+            # Sla de definitieve, geverifieerde status op
+            sla_gebruiker_op(user_id, membership_tier, mollie_payment_id=payment_id)
+            
+            # Update de sessie zodat de app direct Premium/Gold functies toont
+            st.session_state.membership_tier = membership_tier
+            
+            st.success(f"✅ Betaling ontvangen! Je {membership_tier} lidmaatschap is geactiveerd!")
+            st.balloons()
+            
+            # Maak de URL weer schoon
+            del st.query_params["payment_id"]
+            st.rerun()
+            
+        else:
+            st.error("Betaling niet gevonden of nog niet voldaan. Wacht even of probeer het opnieuw.")
+            del st.query_params["payment_id"]
+
+def sla_gebruiker_op(user_id, membership_tier="free", activation_code=None, mollie_payment_id=None):
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute("""
-        INSERT OR REPLACE INTO users (user_id, membership_tier, activation_code, last_payment_at)
-        VALUES (?, ?, ?, CURRENT_TIMESTAMP)
-    """, (user_id, membership_tier, activation_code))
+        INSERT OR REPLACE INTO users (user_id, membership_tier, activation_code, mollie_payment_id, last_payment_at)
+        VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
+    """, (user_id, membership_tier, activation_code, mollie_payment_id))
     conn.commit()
     conn.close()
 
@@ -425,13 +463,28 @@ def genereer_activation_code(tier="premium"):
     code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
     return f"{prefix}-{code}"
 
-def valideer_activation_code(activation_code):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("SELECT user_id, membership_tier FROM users WHERE activation_code = ?", (activation_code,))
-    result = c.fetchone()
-    conn.close()
-    return result
+def valideer_mollie_betaling(payment_id):
+    """Vraagt direct aan Mollie of deze betaling echt is voldaan."""
+    client = get_mollie_client()
+    if not client:
+        return False, None
+    
+    try:
+        # Vraag de status op bij Mollie
+        payment = client.payments.get(payment_id)
+        
+        # Mollie heeft een handige .is_paid() methode
+        if payment.is_paid():
+            # Haal de gegevens op die we bij het aanmaken hebben meegestuurd in 'metadata'
+            tier = payment.metadata.get('tier', 'premium')
+            user_id = payment.metadata.get('user_id')
+            return True, (user_id, tier)
+        else:
+            return False, None
+            
+    except Exception as e:
+        print(f"Mollie check fout: {e}")
+        return False, None
 
 def haal_filosofen_voor_app():
     conn = sqlite3.connect(DB_PATH)
@@ -1475,26 +1528,34 @@ with st.expander(t["faq_title"]):
     st.markdown(t["faq_content"])
 
 # ==========================================
-# 9. MOLLIE BETALING CONTROLE
+# 9. MOLLIE BETALING CONTROLE (Veilige versie)
 # ==========================================
-if "payment" in st.query_params and st.query_params["payment"] == "success":
-    activation_code = st.query_params.get("code", "")
+if "payment_id" in st.query_params:
+    payment_id = st.query_params["payment_id"]
     
-    if activation_code:
-        result = valideer_activation_code(activation_code)
-        if result:
+    with st.spinner("Betaling controleren bij Mollie..."):
+        is_betaald, result = valideer_mollie_betaling(payment_id)
+        
+        if is_betaald and result:
             user_id, membership_tier = result
-            sla_gebruiker_op(user_id, membership_tier, activation_code)
+            
+            # Sla de definitieve, geverifieerde status op
+            sla_gebruiker_op(user_id, membership_tier, mollie_payment_id=payment_id)
+            
+            # Update de sessie zodat de app direct Premium/Gold functies toont
             st.session_state.membership_tier = membership_tier
+            
             st.success(f"✅ Betaling ontvangen! Je {membership_tier} lidmaatschap is geactiveerd!")
             st.balloons()
-            del st.query_params["payment"]
-            del st.query_params["code"]
+            
+            # Maak de URL weer schoon
+            del st.query_params["payment_id"]
             st.rerun()
+            
         else:
-            st.error("Ongeldige activation code")
-            del st.query_params["payment"]
-            del st.query_params["code"]
-    else:
-        st.error("Geen activation code gevonden")
-        del st.query_params["payment"]   
+            st.error("Betaling niet gevonden of nog niet voldaan. Wacht even of probeer het opnieuw.")
+            del st.query_params["payment_id"]  
+# ==========================================
+# STARTUP: Zorg dat de database klaar is voor Mollie
+# ==========================================
+upgrade_database_voor_mollie()        
