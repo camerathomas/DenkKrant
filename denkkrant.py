@@ -1165,6 +1165,7 @@ if menu == t["sidebar_home"]:
     
     if st.button("📰 Start met het nieuws", use_container_width=True, type="secondary", key="btn_start_news"):
         st.session_state.menu_keuze = 1
+        st.session_state.menu_radio = t["sidebar_news"]
         st.rerun()
     
     st.markdown("---")
