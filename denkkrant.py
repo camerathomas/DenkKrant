@@ -1365,7 +1365,9 @@ elif menu == t["sidebar_news"]:
                         st.success("✅ Vertaald!")
                     else:
                         st.error("Vertaling mislukt.")
-
+        else:
+            st.info("🌍 Vertaling is beschikbaar bij **Gold**. Upgrade om nieuws in je eigen taal te lezen.")
+      
         # 📰 DE NIEUWS LIJST
         display_items = st.session_state.get('vertaalde_nieuws_items', nieuws_items)
 
