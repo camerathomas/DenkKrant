@@ -780,21 +780,36 @@ def genereer_gedachte(nieuws_tekst, filosoof_key, filosofen_dict):
         return _genereer_gemini(prompt)  
 
 def vertaal_nieuws(nieuws_tekst, doeltaal):
-    """Vertaalt tekst via translators bibliotheek (gratis, snel, geen API key)"""
+    """Vertaalt tekst via translators bibliotheek met fallback: Google -> Bing -> origineel."""
     import translators as ts
     
+    # Poging 1: Google
     try:
-        # Vertaal via Google Translate (razendsnel en gratis)
         vertaling = ts.translate_text(
-            nieuws_tekst, 
+            nieuws_tekst,
             translator='google',
-            from_language='auto',  # Automatische brondetectie
+            from_language='auto',
             to_language=doeltaal
         )
         return vertaling
     except Exception as e:
-        print(f"⚠️ Vertaling mislukt: {e}")
-        return f"❌ Vertaling mislukt: {e}"           
+        print(f"⚠️ Google vertaling mislukt: {e}")
+    
+    # Poging 2: Bing (fallback)
+    try:
+        vertaling = ts.translate_text(
+            nieuws_tekst,
+            translator='bing',
+            from_language='auto',
+            to_language=doeltaal
+        )
+        return vertaling
+    except Exception as e:
+        print(f"⚠️ Bing vertaling mislukt: {e}")
+    
+    # Poging 3: Geen vertaling, geef origineel terug met een markering
+    print("⚠️ Alle vertalingen mislukt, origineel teruggegeven")
+    return f"[ORIGINEEL] {nieuws_tekst}"         
 
 def bouw_debat_prompt(nieuws_tekst, filosoof_key, filosofen_dict, laatste_reactie_van_andere_filosoof, naam_andere_filosoof):
     filosoof_data = filosofen_dict[filosoof_key]
