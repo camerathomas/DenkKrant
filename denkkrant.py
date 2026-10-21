@@ -726,10 +726,22 @@ def maak_share_image(titel, filosoof_naam, filosoof_emoji, gedachte, commentaar,
 
 async def genereer_audio(tekst, geslacht="male"):
     taal = st.session_state.get('taal', 'nl')
-    if taal == 'en':
-        voice = "en-US-JennyNeural" if geslacht == "female" else "en-US-GuyNeural"
-    else:
-        voice = "nl-NL-FennaNeural" if geslacht == "female" else "nl-NL-MaartenNeural"
+    
+    stemmen = {
+        "nl": {"male": "nl-NL-MaartenNeural", "female": "nl-NL-FennaNeural"},
+        "en": {"male": "en-US-GuyNeural", "female": "en-US-JennyNeural"},
+        "de": {"male": "de-DE-ConradNeural", "female": "de-DE-KatjaNeural"},
+        "es": {"male": "es-ES-AlvaroNeural", "female": "es-ES-ElviraNeural"},
+        "fr": {"male": "fr-FR-HenriNeural", "female": "fr-FR-DeniseNeural"},
+        "pt": {"male": "pt-PT-DuarteNeural", "female": "pt-PT-RaquelNeural"},
+        "ar": {"male": "ar-SA-HamedNeural", "female": "ar-SA-ZariyahNeural"},
+        "zh": {"male": "zh-CN-YunxiNeural", "female": "zh-CN-XiaoxiaoNeural"},
+        "hi": {"male": "hi-IN-MadhurNeural", "female": "hi-IN-SwaraNeural"},
+    }
+    
+    taal_stemmen = stemmen.get(taal, stemmen["nl"])
+    voice = taal_stemmen.get(geslacht, taal_stemmen["male"])
+    
     tekst_clean = tekst.replace("'", "").replace('"', '').replace('\n', ' ')
     with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as temp_audio:
         temp_path = temp_audio.name
