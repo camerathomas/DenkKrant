@@ -1163,7 +1163,7 @@ if menu == t["sidebar_home"]:
     st.markdown("<p style='text-align: center; font-size: 1.2rem; font-style: italic; color: #cccccc; margin-bottom: 30px;'>" + t["app_subtitle"] + "</p>", unsafe_allow_html=True)
     st.markdown("---")
     
-    if st.button("📰 Start met het nieuws", use_container_width=True, type="primary", key="btn_start_news"):
+    if st.button("📰 Start met het nieuws", use_container_width=True, type="secondary", key="btn_start_news"):
         st.session_state.menu_keuze = 1
         st.rerun()
     
