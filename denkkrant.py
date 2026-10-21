@@ -1198,47 +1198,35 @@ if menu == t["sidebar_home"]:
     st.warning(t["welcome_warning"])
             
 elif menu == t["sidebar_news"]:
-    # NIEUWS ZIJBALK (Alleen nieuws-specifieke knoppen)
+    # ==========================================
+    # NIEUWSBRONNEN (centraal gedefinieerd)
+    # ==========================================
+    nieuwsbronnen = {
+        "NOS": "https://feeds.nos.nl/nosnieuwsalgemeen",
+        "Tweakers": "https://tweakers.net/feeds/mixed.xml",
+        "AT5": "https://rss.at5.nl/rss",
+        "Guardian": "https://www.theguardian.com/international/rss",
+        "El País": "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada",
+        "Google News FR": "https://news.google.com/rss?hl=fr&gl=FR&ceid=FR:fr",
+        "Der Spiegel": "https://www.spiegel.de/schlagzeilen/index.rss",
+        "Folha": "https://feeds.folha.uol.com.br/emcimadahora/rss091.xml",
+        "BBC Hindi": "https://feeds.bbci.co.uk/hindi/rss.xml",
+        "China News": "https://www.chinanews.com.cn/rss/importnews.xml",
+        "Al Jazeera": "https://www.aljazeera.net/aljazeerarss/a7c186be-1baa-4bd4-9d80-a84db769f779/73d0e1b4-532f-45ef-b135-bfdff8b8cab9",
+        "NPR": "https://feeds.npr.org/1004/rss.xml",
+    }
+
+    if 'gewenste_bron' not in st.session_state:
+        st.session_state.gewenste_bron = "NOS"
+        st.session_state.gewenste_url = nieuwsbronnen["NOS"]
+
+    # ==========================================
+    # ZIJBALK: alleen instellingen (geen bronkeuze meer)
+    # ==========================================
     with st.sidebar:
-        st.markdown("### " + t["news_choose_source"])
-        nieuwsbronnen = {
-            "NOS": "https://feeds.nos.nl/nosnieuwsalgemeen", "Tweakers": "https://tweakers.net/feeds/mixed.xml", "AT5": "https://rss.at5.nl/rss",
-            "Guardian": "https://www.theguardian.com/international/rss", "El País": "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada",
-            "Google News FR": "https://news.google.com/rss?hl=fr&gl=FR&ceid=FR:fr", "Der Spiegel": "https://www.spiegel.de/schlagzeilen/index.rss",
-            "Folha": "https://feeds.folha.uol.com.br/emcimadahora/rss091.xml", "BBC Hindi": "https://feeds.bbci.co.uk/hindi/rss.xml",
-            "China News": "https://www.chinanews.com.cn/rss/importnews.xml", "Al Jazeera": "https://www.aljazeera.net/aljazeerarss/a7c186be-1baa-4bd4-9d80-a84db769f779/73d0e1b4-532f-45ef-b135-bfdff8b8cab9?utm_source=chatgpt.com", "NPR": "https://feeds.npr.org/1004/rss.xml",
-        }
-        cols = [st.columns(2) for _ in range(6)]
-        bronnen_lijst = list(nieuwsbronnen.items())
-        for idx, (naam, url) in enumerate(bronnen_lijst):
-            col_a, col_b = cols[idx // 2]
-            target_col = col_a if idx % 2 == 0 else col_b
-            with target_col:
-                if st.button(f"{'🇳🇱 ' if naam=='NOS' else '💻 ' if naam=='Tweakers' else '🏙️ ' if naam=='AT5' else '🇪🇸 ' if naam=='El País' else '🇫🇷 ' if naam=='Google News FR' else '🇩🇪 ' if naam=='Stern' else '🇵🇹 ' if naam=='Campo Grande' else '🇮🇳 ' if naam=='BBC Hindi' else '🇨🇳 ' if naam=='China News' else '🇸🇦 ' if naam=='BBC Arabic' else '🇺🇸 ' if naam=='Alternet' else ''}{naam}", use_container_width=True, key=f"btn_{naam.replace(' ', '_').lower()}"):
-                    st.session_state.gewenste_bron = naam
-                    st.session_state.gewenste_url = url
-                    if 'vertaalde_nieuws_items' in st.session_state:
-                        del st.session_state['vertaalde_nieuws_items']
-                    st.session_state.analyses = {}
-                    st.session_state.huidig_nieuws = None
-                    st.rerun()
-        st.markdown("---")
-        custom_rss_url = st.text_input("📡 RSS URL", placeholder="https://...", key="custom_rss_input")
-        if st.button("📡 RSS", key="btn_add_rss", use_container_width=True):
-            if custom_rss_url:
-                st.session_state.gewenste_bron = "Custom RSS"
-                st.session_state.gewenste_url = custom_rss_url
-                st.session_state.analyses = {}
-                st.rerun()        
-        if 'gewenste_bron' not in st.session_state:
-            st.session_state.gewenste_bron = "NOS"
-            st.session_state.gewenste_url = nieuwsbronnen["NOS"]
-        st.info(f"{t['news_current_source']} **{st.session_state.gewenste_bron}**")
-        aantal_nieuws = st.slider(t["news_items_slider"], 1, 10, 5)
-        st.markdown("---")
-        totaal = get_total_usage(st.session_state.user_id)
-        st.caption(f"{t['news_journey']} {totaal} {t['news_since_dawn']}")
-        st.markdown("---")
+        st.markdown("### ⚙️ " + t["sidebar_settings"])
+
+        # Lidmaatschap
         if st.session_state.membership_tier in ["premium", "gold"]:
             st.markdown("### " + t["news_vip_exclusive"])
             st.markdown(t["news_vip_join"])
@@ -1246,16 +1234,72 @@ elif menu == t["sidebar_news"]:
         else:
             st.markdown("### " + t["news_vip_locked"])
             st.caption(t["news_vip_upgrade"])
-    
+
+        st.markdown("---")
+
+        # Aantal nieuwsitems
+        aantal_nieuws = st.slider(t["news_items_slider"], 1, 10, 5)
+
+        st.markdown("---")
+
+        # Custom RSS (blijft in zijbalk, want het is een "geavanceerde" optie)
+        st.markdown("### 📡 Custom RSS")
+        custom_rss_url = st.text_input("RSS URL", placeholder="https://...", key="custom_rss_input", label_visibility="collapsed")
+        if st.button("📡 " + t.get("news_refresh", "Laad RSS"), key="btn_add_rss", use_container_width=True):
+            if custom_rss_url:
+                st.session_state.gewenste_bron = "Custom RSS"
+                st.session_state.gewenste_url = custom_rss_url
+                st.session_state.analyses = {}
+                st.session_state.huidig_nieuws = None
+                if 'vertaalde_nieuws_items' in st.session_state:
+                    del st.session_state['vertaalde_nieuws_items']
+                st.rerun()
+
+        st.markdown("---")
+
+        # Totaal aantal analyses
+        totaal = get_total_usage(st.session_state.user_id)
+        st.caption(f"{t['news_journey']} {totaal} {t['news_since_dawn']}")
+
+        st.markdown("---")
+
+        # Vernieuwen
         if st.button(t["news_refresh"], use_container_width=True, key="btn_vernieuw"):
             st.session_state.analyses = {}
             st.session_state.huidig_nieuws = None
+            if 'vertaalde_nieuws_items' in st.session_state:
+                del st.session_state['vertaalde_nieuws_items']
             st.rerun()
 
-    # NIEUWS HOOFDSCHERM
+    # ==========================================
+    # HOOFDSCHERM: grote bronkeuze bovenaan
+    # ==========================================
+    st.subheader("📡 Kies je nieuwsbron")
+
+    # Grote knoppen in 3 kolommen
+    bron_cols = st.columns(3)
+    for idx, (naam, url) in enumerate(nieuwsbronnen.items()):
+        with bron_cols[idx % 3]:
+            is_actief = (st.session_state.gewenste_bron == naam)
+            knop_label = f"✅ {naam}" if is_actief else naam
+            if st.button(knop_label, use_container_width=True, key=f"main_btn_{naam.replace(' ', '_').lower()}"):
+                st.session_state.gewenste_bron = naam
+                st.session_state.gewenste_url = url
+                st.session_state.analyses = {}
+                st.session_state.huidig_nieuws = None
+                if 'vertaalde_nieuws_items' in st.session_state:
+                    del st.session_state['vertaalde_nieuws_items']
+                st.rerun()
+
+    st.info(f"{t['news_current_source']} **{st.session_state.gewenste_bron}**")
+    st.markdown("---")
+
+    # ==========================================
+    # NIEUWS OPHALEN EN TONEN
+    # ==========================================
     with st.spinner(f"📡 {st.session_state.gewenste_bron} {t['news_fetching']}"):
         nieuws_items = haal_nieuws_op(aantal_nieuws, st.session_state.gewenste_url)
-    
+
     if not nieuws_items:
         st.error(t["news_error"])
     else:
@@ -1265,25 +1309,25 @@ elif menu == t["sidebar_news"]:
         if st.session_state.membership_tier == "gold":
             huidige_taal = st.session_state.get('taal', 'nl')
             taal_namen = {
-                "nl": "Nederlands", "en": "English", "de": "Deutsch", 
+                "nl": "Nederlands", "en": "English", "de": "Deutsch",
                 "es": "Español", "fr": "Français", "pt": "Português",
                 "ar": "العربية", "zh": "中文", "hi": "हिन्दी"
             }
             doeltaal_naam = taal_namen.get(huidige_taal, huidige_taal)
-            
+
             if st.button(f"🌍 Translate in {doeltaal_naam}", use_container_width=True):
                 with st.spinner(f"🌍 Vertalen naar {doeltaal_naam}..."):
                     volledige_artikelen = []
                     for i, item in enumerate(nieuws_items):
                         volledige_artikelen.append(f"Artikel {i+1}:\nTitel: {item['titel']}\nInhoud: {item['beschrijving']}\n")
-                    
+
                     artikelen_tekst = "\n---\n".join(volledige_artikelen)
                     vertaalde_tekst = vertaal_nieuws(artikelen_tekst, huidige_taal)
-                    
+
                     if vertaalde_tekst and not vertaalde_tekst.startswith("❌"):
                         vertaalde_items = []
                         huidige_item = {}
-                        
+
                         for regel in vertaalde_tekst.strip().split('\n'):
                             if regel.startswith('Artikel'):
                                 if huidige_item:
@@ -1293,10 +1337,10 @@ elif menu == t["sidebar_news"]:
                                 huidige_item['titel'] = regel.replace('Titel:', '').strip()
                             elif regel.startswith('Inhoud:'):
                                 huidige_item['inhoud'] = regel.replace('Inhoud:', '').strip()
-                        
+
                         if huidige_item:
                             vertaalde_items.append(huidige_item)
-                        
+
                         vertaalde_nieuws_items = []
                         for i, item in enumerate(nieuws_items):
                             if i < len(vertaalde_items):
@@ -1307,23 +1351,23 @@ elif menu == t["sidebar_news"]:
                                 })
                             else:
                                 vertaalde_nieuws_items.append(item)
-                        
+
                         st.session_state['vertaalde_nieuws_items'] = vertaalde_nieuws_items
                         st.success("✅ Vertaald!")
                     else:
                         st.error("Vertaling mislukt.")
 
-        # 📰 DE NIEUWS LIJST (Gebruik vertaalde items als ze bestaan, anders origineel)
+        # 📰 DE NIEUWS LIJST
         display_items = st.session_state.get('vertaalde_nieuws_items', nieuws_items)
-        
+
         for i, item in enumerate(display_items):
             is_open = f"article_{i}_first" in st.session_state.analyses or f"article_{i}_second" in st.session_state.analyses or f"article_{i}_debate" in st.session_state.analyses
             with st.expander(f"**{item['titel']}**", expanded=is_open):
                 st.markdown(item['beschrijving'])
                 st.markdown(f"[{t['news_read_full']}]({item['link']})")
-                
+
                 nieuws_tekst = f"{item['titel']}. {item['beschrijving']}"
-                
+
                 if st.session_state.membership_tier in ["premium", "gold"] and st.session_state.favoriet:
                     col_ai, col_manual, col_random, col_fav = st.columns(4)
                 else:
@@ -1340,7 +1384,7 @@ elif menu == t["sidebar_news"]:
                                 status.update(label=t["news_thought_formed"], state="complete")
                             log_analysis(st.session_state.user_id)
                             st.session_state.analyses[f"article_{i}_first"] = {"filosoof": gekozen_filosoof, "gedachte": gedachte, "titel": item['titel'], "methode": "ai"}
-                    
+
                     with col_manual:
                         beschikbare_filosofen = ALLE_FILOSOFEN if st.session_state.membership_tier in ["premium", "gold"] else FILOSOFEN
                         manual_filosoof = st.selectbox(t["news_choose_manual"], list(beschikbare_filosofen.keys()), key=f"manual_select_{i}", label_visibility="collapsed")
@@ -1377,7 +1421,7 @@ elif menu == t["sidebar_news"]:
                     filosoof, gedachte, titel = fa["filosoof"], fa["gedachte"], fa["titel"]
                     methode = fa.get("methode", "ai")
                     f = ALLE_FILOSOFEN.get(filosoof, FILOSOFEN.get(filosoof, {}))
-                    
+
                     if methode == "ai":
                         st.success(f"**{f.get('emoji', '')} {filosoof}** {t['news_best_match']}")
                     elif methode == "manual":
@@ -1386,59 +1430,58 @@ elif menu == t["sidebar_news"]:
                         st.success(f"**{f.get('emoji', '')} {t['news_your_fav']} {filosoof}**")
                     else:
                         st.success(f"**{f.get('emoji', '')} {t['news_fate']} {filosoof}**")
-                        
+
                     taal = st.session_state.get('taal', 'nl')
                     vertaalde_filosoof = get_vertaalde_naam(filosoof, taal)
-                    
-                    # Haal de vertaalde beschrijving op uit de JSON, met fallback
+
                     desc = t.get(f"desc_{filosoof}", f.get('beschrijving', 'Geen beschrijving beschikbaar.'))
                     st.info(f"*{desc}*")
-                    
+
                     st.markdown("---")
                     st.markdown(f"### {f.get('emoji', '')} {vertaalde_filosoof} {t['news_says']}")
-                    schone_tekst, noten = verwerk_neologismen(gedachte, filosoof)                    
+                    schone_tekst, noten = verwerk_neologismen(gedachte, filosoof)
                     st.success(schone_tekst)
-                    
+
                     if noten:
                         st.markdown("---")
                         st.markdown(f"*📝 **{filosoof.split(' ')[0]}** {t.get('news_neologism', 'heeft een nieuw woord bedacht')}*")
                         for noot in noten:
                             st.markdown(f"- {noot}")
-                            
+
                     voice_type = t["news_listen_female"] if f.get("geslacht") == "female" else t["news_listen_male"]
                     st.markdown(f"**{t['news_listen']} ({voice_type} {t['news_voice']}):**")
                     maak_audio_player(schone_tekst, f.get("geslacht", "male"), f"first_{i}")
-                    
+
                     st.markdown("---")
                     st.markdown("#### " + t["news_share_on_social"])
                     safe_filosoof = filosoof.replace(" ", "_")
                     commentaar = st.text_area(t["news_add_comment"], key=f"comment_first_{i}_{safe_filosoof}", height=60, placeholder=t["news_comment_placeholder"])
                     share_urls, share_text = maak_share_urls(filosoof, titel, schone_tekst, commentaar)
-                    
+
                     col1, col2 = st.columns(2)
                     with col1:
                         st.markdown(f"[💼 LinkedIn]({share_urls['linkedin']})\n\n[🐦 X (Twitter)]({share_urls['x']})\n\n[📘 Facebook]({share_urls['facebook']})")
                     with col2:
                         st.markdown(f"[💬 WhatsApp]({share_urls['whatsapp']})\n\n[✈️ Telegram]({share_urls['telegram']})\n\n[🇺🇸 Truth Social]({share_urls['truthsocial']})")
-                    
+
                     st.markdown("---")
                     st.caption(t["news_copy_text"])
                     st.code(share_text, language=None)
-                    
+
                     with st.expander(t["news_download_image"]):
                         if st.button(t["news_download_png"], key=f"dl_first_{i}_{safe_filosoof}"):
                             share_img = maak_share_image(titel, filosoof, f.get('emoji', ''), schone_tekst, commentaar, st.session_state.membership_tier in ["premium", "gold"])
                             img_bytes = io.BytesIO()
                             share_img.save(img_bytes, format='PNG')
                             st.download_button(label=t["news_click_to_save"], data=img_bytes.getvalue(), file_name=f"denkkrant_{filosoof.split(' ')[0]}_{i}.png", mime="image/png", key=f"save_first_{i}_{safe_filosoof}")
-                    
+
                     st.markdown("---")
                     st.markdown("#### " + t["news_other_perspective"])
                     andere_beschikbaar = ALLE_FILOSOFEN if st.session_state.membership_tier in ["premium", "gold"] else FILOSOFEN
                     andere_filosoof = st.selectbox(
-                        t["news_choose_other_philosopher"], 
-                        [n for n in andere_beschikbaar.keys() if n != filosoof], 
-                        format_func=lambda x: get_vertaalde_naam(x, st.session_state.taal), 
+                        t["news_choose_other_philosopher"],
+                        [n for n in andere_beschikbaar.keys() if n != filosoof],
+                        format_func=lambda x: get_vertaalde_naam(x, st.session_state.taal),
                         key=f"select_other_{i}_{safe_filosoof}"
                     )
                     if st.button(f"{t['news_read_view_of']} {andere_filosoof.split(' ')[0]}", key=f"other_btn_{i}_{safe_filosoof}"):
@@ -1446,8 +1489,8 @@ elif menu == t["sidebar_news"]:
                             gedachte2 = genereer_gedachte(nieuws_tekst, andere_filosoof, andere_beschikbaar)
                             status2.update(label=t["news_thought_complete"], state="complete")
                         st.session_state.analyses[f"article_{i}_second"] = {"filosoof": andere_filosoof, "gedachte": gedachte2, "titel": titel}
-                        st.rerun()   
-                    
+                        st.rerun()
+
                     # 🥊 FILOSOFISCH DEBAT
                     st.markdown("---")
                     st.markdown(f"#### {t['debate_title']}")
@@ -1459,13 +1502,11 @@ elif menu == t["sidebar_news"]:
                     for idx, reactie in enumerate(dialoog):
                         f_reactie = ALLE_FILOSOFEN.get(reactie["filosoof"], {})
                         emoji = f_reactie.get("emoji", "💭")
-                        
-                        # Gebruik Streamlit's native componenten (mobiel-proof)
                         with st.container():
                             st.markdown(f"#### {emoji} {reactie['filosoof']}")
                             st.markdown(reactie['gedachte'])
                             st.markdown("---")
-                    
+
                     if can_analyze():
                         laatste_filosoof = dialoog[-1]["filosoof"] if dialoog else filosoof
                         beschikbare_filosofen = [n for n in ALLE_FILOSOFEN.keys() if n != laatste_filosoof]
@@ -1483,11 +1524,11 @@ elif menu == t["sidebar_news"]:
                                 dialoog.append({"filosoof": nieuwe_filosoof, "gedachte": nieuwe_reactie})
                                 st.session_state.analyses[debate_key] = dialoog
                                 st.rerun()
-                    
+
                     if dialoog:
                         if st.button(t["debate_end"], key=f"debate_end_first_{i}"):
                             st.session_state.analyses[debate_key] = []
-                            st.rerun()                     
+                            st.rerun()
 
                 if f"article_{i}_second" in st.session_state.analyses:
                     sa = st.session_state.analyses[f"article_{i}_second"]
@@ -1502,11 +1543,11 @@ elif menu == t["sidebar_news"]:
                         st.markdown(f"*📝 **{filosoof2.split(' ')[0]}** {t.get('news_neologism', 'heeft een nieuw woord bedacht')}*")
                         for noot in noten2:
                             st.markdown(f"- {noot}")
-                    
+
                     voice_type2 = t["news_listen_female"] if f2.get("geslacht") == "female" else t["news_listen_male"]
                     st.markdown(f"**{t['news_listen']} ({voice_type2} {t['news_voice']}):**")
                     maak_audio_player(schone_tekst2, f2.get("geslacht", "male"), f"second_{i}")
-                    
+
                     st.markdown("---")
                     st.markdown("#### " + t["news_share_on_social"])
                     safe_filosoof2 = filosoof2.replace(" ", "_")
@@ -1517,7 +1558,7 @@ elif menu == t["sidebar_news"]:
                         st.markdown(f"[💼 LinkedIn]({share_urls2['linkedin']})\n\n[🐦 X (Twitter)]({share_urls2['x']})\n\n[📘 Facebook]({share_urls2['facebook']})")
                     with col2:
                         st.markdown(f"[💬 WhatsApp]({share_urls2['whatsapp']})\n\n[✈️ Telegram]({share_urls2['telegram']})\n\n[🇺🇸 Truth Social]({share_urls2['truthsocial']})")
-                    
+
                     st.markdown("---")
                     st.caption(t["news_copy_text"])
                     st.code(share_text2, language=None)
@@ -1527,7 +1568,7 @@ elif menu == t["sidebar_news"]:
                             img_bytes2 = io.BytesIO()
                             share_img2.save(img_bytes2, format='PNG')
                             st.download_button(label=t["news_click_to_save"], data=img_bytes2.getvalue(), file_name=f"denkkrant_{filosoof2.split(' ')[0]}_{i}_2.png", mime="image/png", key=f"save_second_{i}_{safe_filosoof2}")
-                    
+
                     st.markdown("---")
                     st.markdown("#### " + t["news_other_perspective"])
                     andere_beschikbaar = ALLE_FILOSOFEN if st.session_state.membership_tier in ["premium", "gold"] else FILOSOFEN
