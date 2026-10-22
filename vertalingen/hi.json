@@ -204,5 +204,15 @@
   "desc_Christina I van Zweden": "रानी जिन्होंने आत्मा की स्वतंत्रता के लिए ताज का त्याग कर दिया।",
   "desc_Anna Tumarkin": "नैतिक अग्रणी जो मानती हैं कि सच्चे ज्ञान को नैतिक साहस की आवश्यकता होती है।",
   "desc_Mary Wollstonecraft": "नारीवादी जो महिलाओं के अधिकारों के लिए लड़ती हैं।",
-  "desc_Hadewijch": "मध्यकालीन रहस्यवादी जो दिव्य प्रेम (Minne) का गान करती हैं।"
+  "desc_Hadewijch": "मध्यकालीन रहस्यवादी जो दिव्य प्रेम (Minne) का गान करती हैं।",
+  "home_start_news": "📰 समाचार से शुरू करें",
+  "news_custom_rss_title": "📡 कस्टम RSS",
+  "news_rss_url_placeholder": "https://...",
+  "news_load_rss": "📡 RSS लोड करें",
+  "news_choose_source_title": "📡 अपना समाचार स्रोत चुनें",
+  "news_translate_button": "🌍 {taal} में अनुवाद करें",
+  "news_translating": "🌍 {taal} में अनुवाद हो रहा है...",
+  "news_translated_ok": "✅ अनुवादित!",
+  "news_translate_failed": "अनुवाद विफल रहा।",
+  "news_translate_gold_only": "🌍 अनुवाद **Gold** के साथ उपलब्ध है। अपनी भाषा में समाचार पढ़ने के लिए अपग्रेड करें।"
 }
