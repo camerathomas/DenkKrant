@@ -1314,7 +1314,8 @@ elif menu == t["sidebar_news"]:
 
         # Totaal aantal analyses
         totaal = get_total_usage(st.session_state.user_id)
-        st.caption(f"{t['news_journey']} {totaal} {t['news_since_dawn']}")
+        key = "news_since_dawn_one" if totaal == 1 else "news_since_dawn_many"
+        st.caption(f"{t['news_journey']} {totaal} {t[key]}")
 
         st.markdown("---")
 
