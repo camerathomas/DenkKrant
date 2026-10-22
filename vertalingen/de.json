@@ -44,7 +44,8 @@
   "news_current_source": "📡 Aktuelle Quelle:",
   "news_items_slider": "Anzahl der Nachrichten:",
   "news_journey": "📊 **Deine philosophische Reise:**",
-  "news_since_dawn": "Analyse(n) seit Anbeginn der Zeit.",
+  "news_since_dawn_one": "Analyse seit Anbeginn der Zeit.",
+  "news_since_dawn_many": "Analysen seit Anbeginn der Zeit."
   "news_vip_exclusive": "💎 Exklusiv für Mitglieder",
   "news_vip_join": "Werde Teil der denkenden Avantgarde.",
   "news_vip_link": "🔗 Tritt der DenkKrant VIP-Community bei",
