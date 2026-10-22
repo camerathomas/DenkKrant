@@ -204,5 +204,15 @@
   "desc_Christina I van Zweden": "La reine qui a abdiqué la couronne pour la liberté de l'esprit.",
   "desc_Anna Tumarkin": "La pionnière éthique qui croit que la vraie connaissance requiert le courage moral.",
   "desc_Mary Wollstonecraft": "La féministe qui lutte pour les droits des femmes.",
-  "desc_Hadewijch": "La mystique médiévale qui chante l'amour divin (Minne)."
+  "desc_Hadewijch": "La mystique médiévale qui chante l'amour divin (Minne).",
+  "home_start_news": "📰 Commencer avec l'actualité",
+  "news_custom_rss_title": "📡 RSS personnalisé",
+  "news_rss_url_placeholder": "https://...",
+  "news_load_rss": "📡 Charger le RSS",
+  "news_choose_source_title": "📡 Choisissez votre source d'actualités",
+  "news_translate_button": "🌍 Traduire en {taal}",
+  "news_translating": "🌍 Traduction en {taal}...",
+  "news_translated_ok": "✅ Traduit !",
+  "news_translate_failed": "La traduction a échoué.",
+  "news_translate_gold_only": "🌍 La traduction est disponible avec **Gold**. Améliorez pour lire l'actualité dans votre langue."
 }
