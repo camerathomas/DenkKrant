@@ -44,7 +44,8 @@
   "news_current_source": "📡 Huidige bron:",
   "news_items_slider": "Aantal nieuwsitems:",
   "news_journey": "📊 **Jouw filosofische reis:**",
-  "news_since_dawn": "analyse(s) sinds het begin der tijden.",
+  "news_since_dawn_one": "analyse sinds het begin der tijden.",
+  "news_since_dawn_many": "analyses sinds het begin der tijden."
   "news_vip_exclusive": "💎 Exclusief voor leden",
   "news_vip_join": "Word onderdeel van de denkende voorhoede.",
   "news_vip_link": "🔗 Join de DenkKrant VIP Community",
