@@ -204,5 +204,15 @@
   "desc_Christina I van Zweden": "为了精神自由而放弃王位的女王。",
   "desc_Anna Tumarkin": "伦理先驱，相信真正的知识需要道德勇气。",
   "desc_Mary Wollstonecraft": "为女性权利而战的女权主义者。",
-  "desc_Hadewijch": "中世纪神秘主义者，歌颂神圣之爱（Minne）。"
+  "desc_Hadewijch": "中世纪神秘主义者，歌颂神圣之爱（Minne）。",
+  "home_start_news": "📰 从新闻开始",
+  "news_custom_rss_title": "📡 自定义 RSS",
+  "news_rss_url_placeholder": "https://...",
+  "news_load_rss": "📡 加载 RSS",
+  "news_choose_source_title": "📡 选择你的新闻来源",
+  "news_translate_button": "🌍 翻译成{taal}",
+  "news_translating": "🌍 正在翻译成{taal}...",
+  "news_translated_ok": "✅ 已翻译！",
+  "news_translate_failed": "翻译失败。",
+  "news_translate_gold_only": "🌍 翻译功能适用于 **Gold** 会员。升级后即可用您的语言阅读新闻。"
 }
