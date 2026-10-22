@@ -205,5 +205,15 @@
   "desc_Christina I van Zweden": "Die Königin, die auf die Krone verzichtete für die Freiheit des Geistes.",
   "desc_Anna Tumarkin": "Die ethische Pionierin, die glaubt, dass wahres Wissen moralischen Mut erfordert.",
   "desc_Mary Wollstonecraft": "Die Feministin, die für die Rechte der Frau kämpft.",
-  "desc_Hadewijch": "Die mittelalterliche Mystikerin, die die göttliche Liebe (Minne) besingt."
+  "desc_Hadewijch": "Die mittelalterliche Mystikerin, die die göttliche Liebe (Minne) besingt.",
+  "home_start_news": "📰 Mit den Nachrichten beginnen",
+  "news_custom_rss_title": "📡 Benutzerdefiniertes RSS",
+  "news_rss_url_placeholder": "https://...",
+  "news_load_rss": "📡 RSS laden",
+  "news_choose_source_title": "📡 Wähle deine Nachrichtenquelle",
+  "news_translate_button": "🌍 Ins {taal} übersetzen",
+  "news_translating": "🌍 Übersetzung ins {taal}...",
+  "news_translated_ok": "✅ Übersetzt!",
+  "news_translate_failed": "Übersetzung fehlgeschlagen.",
+  "news_translate_gold_only": "🌍 Übersetzung ist mit **Gold** verfügbar. Upgrade, um die Nachrichten in deiner Sprache zu lesen."
 }
