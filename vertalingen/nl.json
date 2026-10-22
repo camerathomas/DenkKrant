@@ -205,5 +205,15 @@
   "desc_Christina I van Zweden": "De koningin die afstand deed van de kroon voor de vrijheid van de geest.",
   "desc_Anna Tumarkin": "De ethische pionier die gelooft dat ware kennis morele moed vereist.",
   "desc_Mary Wollstonecraft": "De feminist die strijdt voor de rechten van de vrouw.",
-  "desc_Hadewijch": "De middeleeuwse mystica die de goddelijke liefde (Minne) bezingt."
+  "desc_Hadewijch": "De middeleeuwse mystica die de goddelijke liefde (Minne) bezingt.",
+  "home_start_news": "📰 Start met het nieuws",
+  "news_custom_rss_title": "📡 Custom RSS",
+  "news_rss_url_placeholder": "https://...",
+  "news_load_rss": "📡 Laad RSS",
+  "news_choose_source_title": "📡 Kies je nieuwsbron",
+  "news_translate_button": "🌍 Vertaal in {taal}",
+  "news_translating": "🌍 Vertalen naar {taal}...",
+  "news_translated_ok": "✅ Vertaald!",
+  "news_translate_failed": "Vertaling mislukt.",
+  "news_translate_gold_only": "🌍 Vertaling is beschikbaar bij **Gold**. Upgrade om nieuws in je eigen taal te lezen."
 }
