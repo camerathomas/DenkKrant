@@ -1213,7 +1213,7 @@ if menu == t["sidebar_home"]:
         st.session_state.menu_keuze = 1
         st.session_state.menu_radio = t["sidebar_news"]
 
-    if st.button("📰 Start met het nieuws", use_container_width=True, type="secondary", key="btn_start_news", on_click=ga_naar_nieuws):
+if st.button(t["home_start_news"], use_container_width=True, type="secondary", key="btn_start_news", on_click=ga_naar_nieuws):
         st.rerun()
     
     st.markdown("---")
