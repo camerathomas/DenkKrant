@@ -204,5 +204,15 @@
   "desc_Christina I van Zweden": "الملكة التي تنازلت عن العرش من أجل حرية الروح.",
   "desc_Anna Tumarkin": "الرائدة الأخلاقية التي تؤمن أن المعرفة الحقيقية تتطلب شجاعة أخلاقية.",
   "desc_Mary Wollstonecraft": "النسوية التي تناضل من أجل حقوق المرأة.",
-  "desc_Hadewijch": "المتصوفة في العصور الوسطى التي تغني للحب الإلهي (Minne)."
+  "desc_Hadewijch": "المتصوفة في العصور الوسطى التي تغني للحب الإلهي (Minne).",
+  "home_start_news": "📰 ابدأ مع الأخبار",
+  "news_custom_rss_title": "📡 RSS مخصص",
+  "news_rss_url_placeholder": "https://...",
+  "news_load_rss": "📡 تحميل RSS",
+  "news_choose_source_title": "📡 اختر مصدر الأخبار",
+  "news_translate_button": "🌍 ترجم إلى {taal}",
+  "news_translating": "🌍 جارٍ الترجمة إلى {taal}...",
+  "news_translated_ok": "✅ تمت الترجمة!",
+  "news_translate_failed": "فشلت الترجمة.",
+  "news_translate_gold_only": "🌍 الترجمة متاحة مع **Gold**. قم بالترقية لقراءة الأخبار بلغتك."
 }
