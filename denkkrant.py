@@ -855,6 +855,27 @@ def _genereer_ollama(prompt):
         return t.get("error_ollama", "❌ Error with AI").format(e=e)        
 
 def _genereer_gemini(prompt):
+    # 1) Probeer eerst DeepSeek
+    try:
+        ds_key = st.secrets.get("DEEPSEEK_API_KEY") or os.getenv("DEEPSEEK_API_KEY")
+        if ds_key:
+            from openai import OpenAI
+            ds_client = OpenAI(api_key=ds_key, base_url="https://api.deepseek.com")
+            ds_resp = ds_client.chat.completions.create(
+                model="deepseek-flash",
+                messages=[{"role": "user", "content": prompt}],
+                timeout=30,
+            )
+            ds_tekst = ds_resp.choices[0].message.content
+            if ds_tekst and ds_tekst.strip():
+                return ds_tekst.strip()
+            print("⚠️ DeepSeek gaf lege output, val terug op Gemini...")
+        else:
+            print("⚠️ Geen DEEPSEEK_API_KEY gevonden, val terug op Gemini...")
+    except Exception as e:
+        print(f"⚠️ DeepSeek faalde ({e}), val terug op Gemini...")
+
+    # 2) Fallback: jouw bestaande Gemini-logica
     try:
         load_dotenv()
         api_key = os.getenv("GEMINI_API_KEY")
@@ -862,18 +883,17 @@ def _genereer_gemini(prompt):
             return t.get("error_gemini_key", "❌ API key missing")
         from google import genai
         client = genai.Client(api_key=api_key)
-        
-        # Fallback routing: probeert meerdere modellen automatisch
+
         modellen = [
-            "gemini-3.7-flash",    # 1. Jouw werkende versie
-            "gemini-3.6-flash",    # 2. Alternatief
-            "gemini-3.5-flash",     # 3. Back-up
+            "gemini-3.7-flash",
+            "gemini-3.6-flash",
+            "gemini-3.5-flash",
             "gemini-3.8-flash",
-            "gemini-2.5-flash",           # 1. Zeer betrouwbaar, vaak meer capaciteit
-            "gemini-2.5-flash-lite",      # 2. Snel en lichtgewicht
-            "gemini-3.5-flash-lite" 
+            "gemini-2.5-flash",
+            "gemini-2.5-flash-lite",
+            "gemini-3.5-flash-lite",
         ]
-        
+
         for model in modellen:
             try:
                 response = client.models.generate_content(model=model, contents=prompt)
@@ -881,10 +901,9 @@ def _genereer_gemini(prompt):
             except Exception as e:
                 print(f"⚠️ {model} faalde ({e}), probeer volgende...")
                 continue
-        
-        # Als alle modellen falen
+
         return t.get("error_gemini_ai", "❌ AI error").format(e="Alle modellen overbelast")
-    
+
     except Exception as e:
         return t.get("error_gemini_ai", "❌ AI error").format(e=e)
 
